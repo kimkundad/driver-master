@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "gps-app",
-    "slug": "gps-app",
+    "name": "driver-master",
+    "slug": "driver-master",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
