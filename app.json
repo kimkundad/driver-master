@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "driver-master",
-    "slug": "driver-master",
+    "name": "Driver Master",
+    "slug": "gps-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,7 +17,7 @@
       "config": {
         "googleMapsApiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
       },
-      "permissions": ["CAMERA"]  // Camera permission for iOS
+      "permissions": ["CAMERA"] 
     },
     "android": {
       "adaptiveIcon": {
@@ -29,16 +29,14 @@
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
         "FOREGROUND_SERVICE",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "CAMERA"  // Camera permission for Android
+        "CAMERA"  
       ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
         }
       },
-      "package": "com.kimkundad.gpsapp"
+      "package": "com.kimkundad.drivermaster"
     },
     "web": {
       "bundler": "metro",

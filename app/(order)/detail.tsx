@@ -269,7 +269,7 @@ export default function Tracking() {
                     apikey={GOOGLE_MAPS_APIKEY}
                     strokeWidth={3}
                     strokeColor="hotpink"
-                    mode='WALKING'
+                    mode='DRIVING'
                     language='th'
                   />
                   <MapViewDirections
@@ -343,7 +343,7 @@ export default function Tracking() {
 
             <View style={styles.textBoxDetail}>
               <View style={styles.flexItem}>
-                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>ต้นทาง 1</Text>
+                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>ต้นทาง </Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>TIP 9 Industrial Project</Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>ถ.สุขุมวิท บางปูใหม่ เมืองสมุทรปราการ สมุทรปราการ 10280</Text>
               </View>

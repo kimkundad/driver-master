@@ -118,6 +118,7 @@ export default function HomeScreen({ navigation }) {
 
 
   
+
   // Fetch data initially
   useEffect(() => {
     const fetchData = async () => {
