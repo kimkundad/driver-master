@@ -10,7 +10,7 @@ import api from '../../hooks/api'; // Axios instance
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import DeviveryStatus from '../../components/DeviveryStatus';
-
+import { StatusBar } from 'expo-status-bar';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -49,11 +49,11 @@ const sendLocationToApi = async (latitude, longitude) => {
   try {
     const response = await api.post('/myLocation', form);
     console.log('response', response.data);
-    if (response.status === 200) {
-      Alert.alert('สำเร็จ', 'ส่งพิกัดไปยัง api แล้ว');
-    } else {
-      Alert.alert('ข้อผิดพลาด', 'ไม่สามารถส่งพิกัดไปยัง api ได้');
-    }
+    // if (response.status === 200) {
+    //   Alert.alert('สำเร็จ', 'ส่งพิกัดไปยัง api แล้ว');
+    // } else {
+    //   Alert.alert('ข้อผิดพลาด', 'ไม่สามารถส่งพิกัดไปยัง api ได้');
+    // }
   } catch (error) {
     Alert.alert('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการส่งพิกัด');
     console.error('Error sending location:', error);
@@ -64,6 +64,7 @@ const sendLocationToApi = async (latitude, longitude) => {
 export default function HomeScreen({ navigation }) {
   const { userProfile } = useContext(UserContext);
   const [data, setData] = useState(null);
+  const [dataDoc, setDataDoc] = useState(null);
   const [loading, setLoading] = useState(false); // Track loading state
   const [searchInput, setSearchInput] = useState('');
   const [filteredData, setFilteredData] = useState([]);
@@ -128,11 +129,22 @@ export default function HomeScreen({ navigation }) {
         setFilteredData(response.data?.order || []);
       } catch (error) {
         console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
     fetchData();
+
+    const fetchDoc = async () => {
+      try {
+        const response = await api.get('/getDoc');
+        console.log('response.data?.verify', response.data?.verify)
+        setDataDoc(response.data?.verify);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } 
+    };
+
+
+    fetchDoc();
   }, []);
 
   const handleSearch = (text) => {
@@ -153,37 +165,29 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }}>
 
+    <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }}>
+    <StatusBar style="light" />
 <Stack.Screen options={{
                     headerTransparent: true,
                     headerTitle: 'Loadmaster',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
-                        color: '#000', // กำหนดสีของ headerTitle
+                        color: '#fff', // กำหนดสีของ headerTitle
                         fontFamily: 'Prompt_500Medium', // กำหนดฟอนต์
                         fontSize: 18,
                     },
-                    // headerRight: () => (
-                    //     <TouchableOpacity style={styles.btnBack} >
-                    //         <View
-                    //             style={{
-                    //                 backgroundColor: '#fff',
-                    //                 padding: 6,
-                    //                 borderRadius: 10
-                    //             }}
-                    //         >
-                    //             <Ionicons name="notifications-outline" size={22} color="black" />
-                    //         </View>
-                    //     </TouchableOpacity>
-                    // )
                 }} />
 
-      <View style={styles.container}>
 
 
-           {/* Receipt Input Field */}
-           <View style={styles.inputContainer}>
+            
+
+      
+
+      <View style={styles.orangeBackground}>
+      
+      <View style={styles.inputContainer}>
                 <TextInput 
                     placeholder="Enter the receipt number" 
                     style={styles.input} 
@@ -192,6 +196,66 @@ export default function HomeScreen({ navigation }) {
                   />
                   <Feather style={styles.searchIcon} name="search" size={24} color="gray" />
             </View>
+            
+            </View>
+            
+            <View style={styles.container}>
+
+
+              <View>
+
+            <View style={styles.userVerify}>
+                {/* Profile Image and Edit Icon */}
+            <View style={styles.profileContainer}>
+                <Image
+                    source={{
+                      uri: userProfile?.avatar || 'https://wpnrayong.com/admin/assets/media/avatars/300-12.jpg',
+                  }}
+                    style={styles.profileImage}
+                />
+            </View>
+
+            {/* Username and Badge */}
+            <View style={styles.infoContainer}>
+            <TouchableOpacity 
+              onPress={() => {
+                router.push({
+                  pathname: '(setting)',
+                });
+              }}
+              >
+                <View>
+                    <Text style={styles.username}>{userProfile?.name}</Text>
+                    <Text style={styles.code_user}>{userProfile?.code_user}</Text>
+                </View>
+                </TouchableOpacity>
+                <TouchableOpacity 
+              onPress={() => {
+                router.push({
+                  pathname: '(setting)/document',
+                });
+              }}
+              >
+                {dataDoc === true ? (
+                  <View style={styles.badge2}>
+                    <Text style={styles.badgeText2}>ยืนยันสำเร็จ</Text>
+                    <Ionicons name="chevron-forward" size={12} color="#fff" />
+                </View>
+                ) : (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>รอการยืนยันเอกสาร</Text>
+                    <Ionicons name="chevron-forward" size={12} color="black" />
+                </View>
+                )}
+                
+                </TouchableOpacity>
+            </View>
+
+            </View>
+
+           
+              </View>
+
 
             {/* Current Shipments Section */}
             <Text style={styles.sectionTitle}>Current Shipments</Text>
@@ -286,6 +350,107 @@ export default function HomeScreen({ navigation }) {
 
 
 const styles = StyleSheet.create({
+  orangeBackground: {
+    backgroundColor: '#121f43', // Adjust to match the exact orange color you want
+    padding: 20, // Adjust this to control height of orange section
+    paddingBottom: 1,
+    paddingTop: Platform.select({
+      ios: 80,
+      android: 75,
+  }),
+},
+userVerify: {
+  display: 'flex',
+  flexDirection: 'row',
+  gap: 10,
+  borderBottomColor: '#d7dbdf',
+  borderBottomWidth: 0.5,
+  marginBottom: 8,
+  paddingBottom: 2
+},
+profileContainer: {
+  position: 'relative',
+  alignItems: 'center',
+  marginBottom: 8,
+},
+profileImage: {
+  width: 45,
+  height: 45,
+  borderRadius: 30,
+  borderWidth: 2,
+  borderColor: 'white',
+},
+editIcon: {
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  backgroundColor: 'black',
+  width: 18,
+  height: 18,
+  borderRadius: 9,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+infoContainer: {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginTop: -10
+},
+username: {
+  color: 'black',
+  fontSize: 16,
+  fontFamily: 'Prompt_500Medium',
+  marginRight: 8,
+},
+code_user: {
+  fontSize: 12,
+  fontFamily: 'Prompt_400Regular',
+  color: '#999'
+},
+badge: {
+  backgroundColor: '#e0e0e0',
+  borderRadius: 12,
+  paddingHorizontal: 15,
+  paddingVertical: 4,
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+badge2: {
+  backgroundColor: '#28a745',
+  borderRadius: 12,
+  paddingHorizontal: 15,
+  paddingVertical: 4,
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+badgeText: {
+  color: 'black',
+  fontSize: 12,
+  marginRight: 4,
+  fontFamily: 'Prompt_400Regular',
+},
+badgeText2: {
+  color: '#fff',
+  fontSize: 12,
+  marginRight: 4,
+  fontFamily: 'Prompt_400Regular',
+},
+followContainer: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginTop: 8,
+},
+followText: {
+  color: 'white',
+  fontSize: 14,
+  marginHorizontal: 12,
+},
+whiteBackground: {
+    flex: 1,
+    backgroundColor: '#fff',
+},
   textListHead: {
     display: 'flex',
     flexDirection: 'row',
@@ -304,6 +469,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 7
 },
+
 searchIcon: {
   padding: 0,
 },
@@ -361,10 +527,10 @@ input: {
     backgroundColor: '#f8f8f8',
     padding: 10,
     paddingHorizontal: 15,
-    marginTop: Platform.select({
-      ios: 80,
-      android: 75,
-  }),
+  //   marginTop: Platform.select({
+  //     ios: 80,
+  //     android: 75,
+  // }),
 
   },
   addShipmentContainer: {

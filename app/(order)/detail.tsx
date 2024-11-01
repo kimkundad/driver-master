@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Button, Text, View, Platform, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Image, Button, Switch, Text, View, Platform, Linking, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -26,6 +26,24 @@ export default function Tracking() {
   const [destination, setDestination] = useState({ latitude: 13.5116094, longitude: 100.68715 }); // เก็บตำแหน่งปลายทาง
   const [carTack, setCarTack] = useState({ latitude: 0, longitude: 0 }); // เก็บตำแหน่งปลายทาง
 
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  const toggleSwitch = async () => {
+    const newStatus = !isEnabled;
+    setIsEnabled(newStatus);
+
+    try {
+        const response = await api.post('/postNotiDri', {
+            id: order?.id,
+            newStatus: newStatus ? 'เปิด' : 'ปิด' // เปลี่ยนข้อความตามที่คุณต้องการในฐานข้อมูล
+        });
+        console.log('API Response:', response.data); // Log ข้อมูลจาก API
+    } catch (error) {
+        console.error('API Error:', error.toJSON());
+        Alert.alert('ข้อผิดพลาด', error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
+    }
+};
+
   const [imgS1, setImgS1] = useState(null);
   const [imgS2, setImgS2] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,12 +55,13 @@ export default function Tracking() {
     // ฟังก์ชัน async ที่จะเรียก API
     const fetchOrder = async () => {
       try {
-        const response = await api.get(`/getOrderByID/${id}`); // เรียก API เพื่อดึง order ข้อมูลผู้ใช้
+        const response = await api.get(`/getOrderByIDDri/${id}`); // เรียก API เพื่อดึง order ข้อมูลผู้ใช้
         const orderData = response.data.order;
-        console.log('data-->', response.data.order.d_long)
+        console.log('data-->', orderData?.status_dri)
         setData(orderData); // ตั้งค่า order ที่ได้รับจาก API
         setImgS1(response?.data?.img);
         setImgS2(response?.data?.img2);
+        setIsEnabled(orderData?.status_dri === 1); 
         // อัพเดทตำแหน่งต้นทางและปลายทาง
         setOrigin({
           latitude: parseFloat(orderData.latitude),
@@ -119,7 +138,6 @@ export default function Tracking() {
     }
   };
 
-
   const handleCreate = async () => {
     setLoading(true);
 
@@ -136,10 +154,10 @@ export default function Tracking() {
       });
       console.log('API Response:', response.data);
 
-      if (response.data.msgStatus === 200) {
+      if (response.data.success === true) {
         router.push('(order)/success');
       } else {
-        Alert.alert('ข้อผิดพลาด', 'ไม่สามารถปิดงานได้');
+        Alert.alert('ข้อผิดพลาด', response?.data?.message);
       }
     } catch (error) {
       console.error('API Error:', error.toJSON()); // Log detailed error info
@@ -172,7 +190,7 @@ export default function Tracking() {
               <Text style={styles.btnText}>แจ้งอุบัติเหตุ</Text>
             </View>
           </TouchableOpacity>
-  
+
           <TouchableOpacity onPress={handleCancel} disabled={loading} style={{ marginTop: 15 }} >
             <View style={styles.btnDangerCan}>
               <Text style={styles.btnText}>{loading ? 'กำลังยกเลิกแจ้งเหตุ...' : 'ยกเลิกแจ้งเหตุ'} </Text>
@@ -221,7 +239,7 @@ export default function Tracking() {
           backgroundColor: 'white', // เพิ่มพื้นหลังสีขาวให้กับหน้าจอ
         },
         headerLeft: () => (
-          <TouchableOpacity style={styles.backIcon} onPress={() => 
+          <TouchableOpacity style={styles.backIcon} onPress={() =>
             router.push({
               pathname: '(tabs)',
               params: { id: id }, // Pass the branch id as a parameter
@@ -344,7 +362,7 @@ export default function Tracking() {
             <View style={styles.textBoxDetail}>
               <View style={styles.flexItem}>
                 <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>ต้นทาง </Text>
-                <Text style={{ fontWeight: 700, fontSize: 13 }}>TIP 9 Industrial Project</Text>
+                <Text style={{ fontWeight: 700, fontSize: 13 }}>TIP 9 Industrial Project </Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>ถ.สุขุมวิท บางปูใหม่ เมืองสมุทรปราการ สมุทรปราการ 10280</Text>
               </View>
             </View>
@@ -424,6 +442,29 @@ export default function Tracking() {
             </View>
           </View>
 
+          <Text style={styles.sectionTitle}>ยืนยันส่งของให้ลูกค้า</Text>
+          <View style={styles.boxItemList2}>
+            <View style={styles.textListHead2}>
+              <View style={styles.profile}>
+                <View>
+                  <Ionicons name="notifications-outline" size={24} color="black" />
+                </View>
+                <View>
+                  <Text style={styles.textSeting}>แจ้งให้ลูกค้ากำลังไป</Text>
+                </View>
+              </View>
+              <View>
+                <Switch
+                  trackColor={{ false: '#767577', true: '#81b0ff' }}
+                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              </View>
+            </View>
+          </View>
+
           <Text style={styles.sectionTitle}>รูปส่งของสำเร็จ</Text>
           <View style={styles.boxItemList2}>
             <View style={styles.showflexCamera}>
@@ -465,26 +506,26 @@ export default function Tracking() {
           </View>
 
 
-          
+
 
           {order?.order_status == 1 && (
             <View>
-          <TouchableOpacity
-            onPress={handleCreate} disabled={loading}
-          >
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>{loading ? 'กำลังส่งของสำเร็จ...' : 'ส่งของสำเร็จ'} </Text>
-            </View>
-          </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCreate} disabled={loading}
+              >
+                <View style={styles.btn}>
+                  <Text style={styles.btnText}>{loading ? 'กำลังส่งของสำเร็จ...' : 'ส่งของสำเร็จ'} </Text>
+                </View>
+              </TouchableOpacity>
 
-          </View>
+            </View>
           )}
 
           <View>
             {renderOrderStatusButtons(order)}
           </View>
 
-{/* {(order?.order_status === 3) ? (
+          {/* {(order?.order_status === 3) ? (
   <View style={{ display: 'flex', flexDirection: 'row', gap: 10, justifyContent: 'center' }}>
   <TouchableOpacity
   style={{ marginTop: 15 }}
@@ -546,6 +587,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
+  },
+  textListHead2: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
+  },
+  textSeting: {
+    fontSize: 16,
+    fontFamily: 'Prompt_400Regular'
   },
   scrollContainer: {
     marginTop: 0

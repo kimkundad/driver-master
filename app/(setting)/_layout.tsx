@@ -12,6 +12,7 @@ export default function Layout() {
       <Stack.Screen name="policy" options={{ headerShown: false }} />
       <Stack.Screen name="about" options={{ headerShown: false }} />
       <Stack.Screen name="notification" options={{ headerShown: false }} />
+      <Stack.Screen name="upDoc"  />
     </Stack>
     </UserProvider>
   );

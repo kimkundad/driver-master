@@ -118,7 +118,10 @@ export default function FileUploadScreen() {
                 console.log('address', address);
             
                 const zipcode = address[0].postalCode;
-                setGetAddress(address[0].formattedAddress)
+                const addr = address[0];
+                const formattedAddress = `${addr.street || ''} ${addr.district || ''} ${addr.subregion || ''} ${addr.region || ''} ${addr.country || ''} ${addr.postalCode || ''}`.trim();
+
+                setGetAddress(formattedAddress)
                 // Find matching province from JSON based on postal code
                 const provinceEntry = provinceData.find(
                   (entry) => entry.zipcode.toString() === zipcode
@@ -155,6 +158,7 @@ export default function FileUploadScreen() {
         // Remove the image from the files state
         setFiles((prevFiles) => prevFiles.filter((file) => file.id !== id));
     };
+
 
     // Open the camera to capture a photo
     const openCamera = async (id) => {

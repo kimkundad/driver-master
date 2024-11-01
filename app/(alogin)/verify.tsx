@@ -41,7 +41,7 @@ export default function Verify() {
 
         // phone
 
-        const response = await axios.post('https://api.loadmasterth.com/api/reverify', {
+        const response = await axios.post('https://170e-124-120-218-0.ngrok-free.app/api/reverify', {
           phone_number: phone, // Phone number from params
         });
 
@@ -83,7 +83,7 @@ export default function Verify() {
         console.log('otp', phone);
   
         // Make the API call to verify the OTP
-        const response = await axios.post('https://api.loadmasterth.comp/api/verify', {
+        const response = await axios.post('https://170e-124-120-218-0.ngrok-free.appp/api/verify', {
           verification_code: otp.join(''), // Send OTP as a single string
           phone_number: phone, // Phone number from params
         });

@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, Switch, Platform, ScrollView, TouchableOpacity, TextInput , Dimensions} from 'react-native';
+import { Image, Text, View, StyleSheet, Alert, Switch, Platform, ScrollView, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Link, useNavigation, router, Stack } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,24 +7,145 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../../hooks/UserContext';
+import api from '../../hooks/api'; // Axios instance
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
+
 
 export default function Profile() {
 
-  const { logout }  = useContext(UserContext);
-  const { userProfile }  = useContext(UserContext);
+  const { logout } = useContext(UserContext);
+  const { userProfile, setUserProfile } = useContext(UserContext);
+  const [files, setFiles] = useState(null); // Holds URI of selected image
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for API call
 
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  useEffect(() => {
 
-    const handleLogout = async () => {
-      try {
-        await logout();
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    };
+    setIsEnabled(userProfile?.noti === 1);
+    console.log('API Response userProfile?.noti:', userProfile?.noti);
+
+  }, [userProfile]); // Depend on id to refetch when it changes
+
+
+  const toggleSwitch = async () => {
+    const newStatus = !isEnabled;
+    setIsEnabled(newStatus);
+
+    try {
+      const response = await api.post('/notiStatus', {
+        id: userProfile?.id,
+        newStatus: newStatus ? 'เปิด' : 'ปิด' // เปลี่ยนข้อความตามที่คุณต้องการในฐานข้อมูล
+      });
+      console.log('API Response:', response?.data?.data?.user); // Log ข้อมูลจาก API
+      const updatedUser = response?.data?.data?.user;
+      await AsyncStorage.setItem('user_profile', JSON.stringify(updatedUser));
+
+
+    } catch (error) {
+      console.error('API Error:', error.toJSON());
+      Alert.alert('ข้อผิดพลาด', error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Function to open image picker and set the profile image
+  const openImagePicker = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const cameraPermissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.status !== 'granted' || cameraPermissionResult.status !== 'granted') {
+      Alert.alert('Permission required', 'Camera and gallery access are required to upload a profile picture.');
+      return;
+    }
+
+    Alert.alert(
+      'Upload Profile Picture', 
+      'Choose an option',
+      [
+        {
+          text: 'Take Photo',
+          onPress: async () => {
+            const result = await ImagePicker.launchCameraAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              quality: 1,
+            });
+            if (!result.cancelled) {
+              console.log('New Image URI:', result.uri); // Check URI
+              setFiles(result.uri || result?.assets?.[0]?.uri);
+              await uploadImage(result?.assets?.[0]?.uri);
+            }
+          },
+        },
+        {
+          text: 'Choose from Gallery',
+          onPress: async () => {
+            const result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images, // Allow only images
+              allowsEditing: true,
+              quality: 1,
+            });
+            if (!result.cancelled) {
+              console.log('New Image URI:', result.uri); // Check URI
+              setFiles(result.uri || result?.assets?.[0]?.uri);
+              await uploadImage(result?.assets?.[0]?.uri);
+            }
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
+
+
+   // Function to upload image to the server
+   const uploadImage = async (uri) => {
+    setLoading(true); // Start loading
+
+    try {
+        const formData = new FormData();
+        formData.append('images', {
+            uri: uri,
+            name: `avatar_${Date.now()}.jpg`, // Generate a unique filename
+            type: 'image/jpeg',
+        });
+
+        // Assuming `api` is configured with your base URL and headers
+        const response = await api.post('/UpAvatar', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        // Handle API response
+        if (response.data.msgStatus === 200) {
+          console.log('user-->', response.data?.user)
+          const updatedUser = response.data.user;
+          await AsyncStorage.setItem('user_profile', JSON.stringify(updatedUser));
+          setUserProfile(updatedUser); // Update UserContext
+
+            Alert.alert('Success', 'Profile picture updated successfully');
+        } else {
+            Alert.alert('Error', 'Failed to update profile picture');
+        }
+
+    } catch (error) {
+        console.error('API Error:', error);
+        Alert.alert('Error', error.message || 'An error occurred while uploading');
+    } finally {
+        setLoading(false); // Stop loading
+    }
+};
 
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
@@ -41,186 +162,241 @@ export default function Profile() {
       <ScrollView>
 
 
-                <View style={styles.container}>
+        <View style={styles.container}>
 
-                  <View style={styles.bodyContainer}>
+          <View style={styles.bodyContainer}>
 
 
-                  <View style={{ alignItems: 'center', paddingTop: 15 }}>
-              <Image
-                style={styles.userImageCenter}
-                source={{ uri: 'https://wpnrayong.com/admin/assets/media/avatars/300-12.jpg' }} />
+            <View style={{ alignItems: 'center', paddingTop: 15 }}>
+              {/* Container for image and edit button */}
+              <View style={{ position: 'relative' }}>
+                {/* Profile Image */}
+
+
+
+                <Image
+                  key={files}
+                  style={styles.userImageCenter}
+                  source={{
+                    uri: files || userProfile?.avatar || 'https://wpnrayong.com/admin/assets/media/avatars/300-12.jpg',
+                }}
+                />
+
+
+                {/* Edit Button */}
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 5,
+                    right: 5,
+                    backgroundColor: '#fff', // Background for better visibility
+                    borderRadius: 50,
+                    padding: 4,
+                  }}
+                  onPress={openImagePicker}
+                >
+                  <MaterialIcons name="edit" size={18} color="black" />
+                </TouchableOpacity>
+              </View>
+
+              {/* User Details */}
               <View style={{ alignItems: 'center' }}>
                 <Text style={{
                   color: '#000', fontSize: 18, fontFamily: 'Prompt_500Medium',
-                }}>{userProfile?.name}</Text>
+                }}>
+                  {userProfile?.name}
+                </Text>
                 <View style={styles.showflex}>
                   <Text style={{
-                    color: '#000', fontSize: 14, fontFamily: 'Prompt_500Medium', fontWeight: 700, marginRight: 5
-                  }}>รหัส</Text>
+                    color: '#000', fontSize: 14, fontFamily: 'Prompt_500Medium', fontWeight: '700', marginRight: 5
+                  }}>
+                    รหัส
+                  </Text>
                   <Text style={{
                     color: '#000', fontSize: 14, fontFamily: 'Prompt_400Regular',
-                  }}>{userProfile?.code_user}</Text>
+                  }}>
+                    {userProfile?.code_user} 
+                  </Text>
                 </View>
               </View>
             </View>
 
             <View style={styles.line_bot}></View>
 
-                  
-                   {/* Menu Setting */}
+
+            {/* Menu Setting */}
             <View style={{ marginTop: 8 }}>
 
-<TouchableOpacity
-  onPress={() => {
-    // handle onPress
-    router.push('(setting)');
-  }}>
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <AntDesign name="user" size={20} color="black" />
-      </View>
-      <View>
-        <Text style={styles.textSeting}>Edit Profile</Text>
-      </View>
-    </View>
-    <View>
-      <Feather name="chevron-right" size={24} color="black" />
-    </View>
-  </View>
-</TouchableOpacity>
-
-<TouchableOpacity
-  onPress={() => {
-    // handle onPress
-    router.push('(setting)/language');
-  }}>
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <Entypo name="language" size={20} color="black" />
-      </View>
-      <View>
-        <Text style={styles.textSeting}>Language</Text>
-      </View>
-    </View>
-
-    <View>
-      <View style={styles.showflex}>
-        <View style={{ marginRight: 10 }}>
-          <Text style={styles.textSeting2}>ภาษาไทย (TH)</Text>
-        </View>
-        <Feather name="chevron-right" size={24} color="black" />
-      </View>
-    </View>
-  </View>
-</TouchableOpacity>
-
-<TouchableOpacity
-  onPress={() => {
-    // handle onPress
-    router.push('(setting)/helpcen');
-  }}>
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <Feather name="phone" size={20} color="black" />
-      </View>
-      <View>
-        <Text style={styles.textSeting}>Help Center</Text>
-      </View>
-    </View>
-    <View>
-      <Feather name="chevron-right" size={24} color="black" />
-    </View>
-  </View>
-</TouchableOpacity>
-<View >
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <Ionicons name="notifications-outline" size={24} color="black" />
-      </View>
-      <View>
-        <Text style={styles.textSeting}>Notification</Text>
-      </View>
-    </View>
-    <View>
-      <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
-    </View>
-  </View>
-</View>
-<View >
-  <TouchableOpacity
-    onPress={() => {
-      // handle onPress
-      router.push('(setting)/policy');
-    }}>
-    <View style={styles.textListHead2}>
-      <View style={styles.profile}>
-        <View>
-          <MaterialIcons name="lock-outline" size={20} color="black" />
-        </View>
-        <View>
-          <Text style={styles.textSeting}>privacy policy</Text>
-        </View>
-      </View>
-      <View>
-        <Feather name="chevron-right" size={24} color="black" />
-      </View>
-    </View>
-  </TouchableOpacity>
-</View>
-
-<TouchableOpacity
-  onPress={() => {
-    // handle onPress
-    router.push('(setting)/about');
-  }}>
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <Feather name="info" size={20} color="black" />
-      </View>
-      <View>
-        <Text style={styles.textSeting}>About Us</Text>
-      </View>
-    </View>
-    <View>
-      <Feather name="chevron-right" size={24} color="black" />
-    </View>
-  </View>
-</TouchableOpacity>
-<TouchableOpacity
-  onPress={handleLogout}
-  >
-  <View style={styles.textListHead2}>
-    <View style={styles.profile}>
-      <View>
-        <AntDesign name="logout" size={20} color="#dc3545" />
-      </View>
-      <View>
-        <Text style={styles.textSeting3}>Logout</Text>
-      </View>
-    </View>
-    <View>
-      <Feather name="chevron-right" size={24} color="#dc3545" />
-    </View>
-  </View>
-</TouchableOpacity>
-
-</View>
-{/* Menu Setting */}
-                    
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  router.push('(setting)');
+                }}>
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <AntDesign name="user" size={20} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>Edit Profile</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Feather name="chevron-right" size={24} color="black" />
                   </View>
                 </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  router.push('(setting)/document');
+                }}>
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <Ionicons name="document-outline" size={20} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>เอกสาร</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Feather name="chevron-right" size={24} color="black" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  router.push('(setting)/language');
+                }}>
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <Entypo name="language" size={20} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>Language</Text>
+                    </View>
+                  </View>
+
+                  <View>
+                    <View style={styles.showflex}>
+                      <View style={{ marginRight: 10 }}>
+                        <Text style={styles.textSeting2}>ภาษาไทย (TH)</Text>
+                      </View>
+                      <Feather name="chevron-right" size={24} color="black" />
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  router.push('(setting)/helpcen');
+                }}>
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <Feather name="phone" size={20} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>Help Center</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Feather name="chevron-right" size={24} color="black" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <View >
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <Ionicons name="notifications-outline" size={24} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>Notification</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Switch
+                      trackColor={{ false: '#767577', true: '#81b0ff' }}
+                      thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitch}
+                      value={isEnabled}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View >
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                    router.push('(setting)/policy');
+                  }}>
+                  <View style={styles.textListHead2}>
+                    <View style={styles.profile}>
+                      <View>
+                        <MaterialIcons name="lock-outline" size={20} color="black" />
+                      </View>
+                      <View>
+                        <Text style={styles.textSeting}>privacy policy</Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Feather name="chevron-right" size={24} color="black" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  router.push('(setting)/about');
+                }}>
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <Feather name="info" size={20} color="black" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting}>About Us</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Feather name="chevron-right" size={24} color="black" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleLogout}
+              >
+                <View style={styles.textListHead2}>
+                  <View style={styles.profile}>
+                    <View>
+                      <AntDesign name="logout" size={20} color="#dc3545" />
+                    </View>
+                    <View>
+                      <Text style={styles.textSeting3}>Logout</Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Feather name="chevron-right" size={24} color="#dc3545" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+            </View>
+            {/* Menu Setting */}
+
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaProvider>
   );
@@ -233,9 +409,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     textAlign: 'center'
-    
-},
-showflex: {
+
+  },
+  showflex: {
     display: 'flex',
     flexDirection: 'row',
   },
@@ -249,7 +425,7 @@ showflex: {
     height: 45,
     borderRadius: 99,
   },
-textSeting: {
+  textSeting: {
     fontSize: 16,
     fontFamily: 'Prompt_400Regular'
   },
@@ -258,14 +434,14 @@ textSeting: {
     fontFamily: 'Prompt_400Regular',
     color: '#3858b1'
   },
-textListHead: {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  padding: 10,
-  fontFamily: 'Prompt_400Regular',
-},
-textSeting3: {
+  textListHead: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    fontFamily: 'Prompt_400Regular',
+  },
+  textSeting3: {
     fontSize: 15,
     fontFamily: 'Prompt_400Regular',
     color: '#dc3545'
@@ -276,40 +452,40 @@ textSeting3: {
     borderBottomWidth: 0.3,
     paddingBottom: 20
   },
-profile: {
+  profile: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10
   },
-textListHead2: {
+  textListHead2: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 12,
     paddingBottom: 12
   },
-container: {
-  padding: 10,
-  paddingHorizontal: 12,
-  marginTop: Platform.select({
-    ios: 75,
-    android: 65,
-  }),
-},
-bodyContainer: {
-  padding: 12,
-  borderRadius: 20,
-  backgroundColor: '#F5F5F5',
-},
-boxWhite: {
-  padding: 10,
-  borderRadius: 20,
-  backgroundColor: '#fff',
-},
-image: {
-  width: 345, // Full width of the screen
-  height: 120,  // Set the height as needed
-  borderRadius: 35
-},
+  container: {
+    padding: 10,
+    paddingHorizontal: 12,
+    marginTop: Platform.select({
+      ios: 75,
+      android: 65,
+    }),
+  },
+  bodyContainer: {
+    padding: 12,
+    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+  },
+  boxWhite: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+  },
+  image: {
+    width: 345, // Full width of the screen
+    height: 120,  // Set the height as needed
+    borderRadius: 35
+  },
 });
