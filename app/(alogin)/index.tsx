@@ -47,7 +47,7 @@ export default function Login() {
     try {
       console.log('try')
       // Replace with your API endpoint
-      const response = await axios.post('https://170e-124-120-218-0.ngrok-free.app/api/login', {
+      const response = await axios.post('https://api.loadmasterth.com/api/login', {
         phone: form.email,
         password: form.password,
       });

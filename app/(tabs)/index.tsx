@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Image, Text, View, StyleSheet, Alert, FlatList, TouchableOpacity, ActivityIndicator, Keyboard, TouchableWithoutFeedback, TextInput, ImageBackground, Platform } from 'react-native';
+import { Image, Text, View, RefreshControl, StyleSheet, Alert, FlatList, TouchableOpacity, ActivityIndicator, Keyboard, TouchableWithoutFeedback, TextInput, ImageBackground, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
@@ -68,6 +68,22 @@ export default function HomeScreen({ navigation }) {
   const [loading, setLoading] = useState(false); // Track loading state
   const [searchInput, setSearchInput] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    console.log('onRefresh')
+    try {
+      // Re-fetch data on refresh
+      const response = await api.get('/getOrderDri');
+      setData(response.data?.order || []);
+      setFilteredData(response.data?.order || []);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const startBackgroundLocationTracking = async () => {
@@ -164,9 +180,9 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
 
-    <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
     <StatusBar style="light" />
 <Stack.Screen options={{
                     headerTransparent: true,
@@ -337,6 +353,7 @@ export default function HomeScreen({ navigation }) {
             </View>
             </TouchableOpacity>
             )}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             ListEmptyComponent={<Text style={styles.emptyText}>No orders found</Text>}
           />
 

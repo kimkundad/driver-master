@@ -1,6 +1,6 @@
 import { Image, View, Text, StyleSheet, Platform, TextInput, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Link, useNavigation, router } from 'expo-router';
+import { Link, useNavigation, router, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,140 +14,178 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
+
+
 const Policy = () => {
-    return (
-        <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
-            <StatusBar style="dark" />
-            <ScrollView>
-                <View style={styles.listItemCon}>
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Link href="/(tabs)/profile" style={{ padding: 10 }}>
-                            <Ionicons name="chevron-back" size={30} color="black" />
-                        </Link>
-                        <View style={styles.textListHead} >
-                            <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium' }}>Privacy Policy</Text>
-                        </View>
-                        <View >
-                            <Ionicons style={{ padding: 10 }} name="notifications-outline" size={27} color="black" />
-                        </View>
-                    </View>
-                </View>
-                <View>
-                    <View style={{ marginTop: 0, }}>
+
+    const navigation = useNavigation(); // For Back button functionality
+
+    const data = [
+        "ข้อมูลส่วนบุคคลประเภทใดบ้างที่บริษัทฯ เก็บรวบรวม รวมถึงข้อมูลที่ท่านมอบให้แก่บริษัทฯ เกี่ยวกับตัวท่านเองหรือบุคคลที่เกี่ยวข้องกับธุรกิจของท่าน (“ท่าน”) และข้อมูลที่บริษัทฯ ได้รับจากการที่ท่านเป็นลูกค้าของบริษัทฯ",
+        "วิธีการที่บริษัทฯ ใช้ข้อมูลส่วนบุคคลของท่าน",
+        "ผู้ที่บริษัทฯ อาจเปิดเผยข้อมูลส่วนบุคคลของท่านให้ทราบ",
+        "ทางเลือกที่บริษัทฯ นำเสนอให้ท่าน รวมถึงวิธีการเข้าถึงและปรับปรุงข้อมูลส่วนบุคคลของท่านให้เป็นปัจจุบัน",
+        "สิทธิที่ท่านมีต่อข้อมูลส่วนบุคคลของท่าน และการคุ้มครองตามกฎหมายที่เกี่ยวข้อง"
+    ];
+    
+    const data2 = [
+        "เมื่อท่านใช้บริการจัดส่งพัสดุหรือผลิตภัณฑ์ของบริษัทฯ",
+        "การสื่อสารระหว่างท่านและบริษัทฯ ผ่านโทรศัพท์ จดหมาย อีเมล หรือวิธีการอื่น ๆ",
+        "เมื่อท่านใช้งานเว็บไซต์หรือแอปพลิเคชันของบริษัทฯ รวมถึงการเก็บข้อมูลผ่านคุกกี้และโปรแกรมติดตามอื่น ๆ",
+        "ข้อมูลจากเอกสารหรือแบบสำรวจความเห็นของลูกค้า",
+        "กิจกรรมส่งเสริมการขายหรือการแข่งขันที่ท่านเข้าร่วมกับบริษัทฯ"
+    ];
+    
+    const data3 = [
+        "ข้อมูลส่วนตัว เช่น ชื่อ-นามสกุล วันเกิด หมายเลขบัตรประชาชน และข้อมูลการติดต่อ",
+        "ข้อมูลทางการเงิน เช่น บัญชีธนาคาร เลขบัตรเครดิต",
+        "ข้อมูลครอบครัวและข้อมูลการทำธุรกรรม",
+        "ข้อมูลอิเล็กทรอนิกส์ เช่น ที่อยู่ IP และบันทึกกิจกรรม",
+    ];
+
+    const data4 = [
+        "เพื่อพัฒนาการให้บริการด้านการจัดส่งพัสดุ และการตอบสนองความต้องการของท่าน",
+        "เพื่อปรับปรุงคุณภาพการให้บริการออนไลน์ให้มีประสิทธิภาพและสะดวกสบาย",
+        "เพื่อป้องกันการเข้าถึงบัญชีโดยไม่ได้รับอนุญาต และตรวจสอบการใช้งานบัญชีของท่าน",
+        "เพื่อส่งเสริมการขาย นำเสนอข่าวสารและสิทธิประโยชน์ที่ตรงกับความสนใจของท่าน",
+
+        "เพื่อสนับสนุนกิจกรรมการตลาดและการวิเคราะห์ข้อมูล",
+        "เพื่อระงับข้อพิพาทหรือข้อขัดแย้งที่อาจเกิดขึ้น",
+        "เพื่อปฏิบัติตามกฎหมายและกฎระเบียบที่เกี่ยวข้อง",
+    ];
+
+
+    const renderContent = () => (
+        <View style={{ marginTop: 0, }}>
 
                         <View style={styles.container}>
 
-                            <View>
-                                <Text style={styles.header}>1. ข้อกําหนดทั่วไป</Text>
-                            </View>
                             <View style={styles.mt10}>
-                                <Text style={styles.textDetail}>
-                                    1.1
-                                    ผู้ใช้บริการตกลงที่จะปฏิบัติและผูกพันตามเงื่อนไขการให้บริการ
-                                    ซึ่งการใช้บริการของผู้ใช้บริการถือเป็นการยอมรับเงื่อนไขการให้บริการนี้
-                                    โดยบริษัทอาจแก้ไข หรือเพิ่มเติมเงื่อนไขการให้บริการได้
-                                    ไม่ว่าในเวลาใด โดยบริษัทจะแจ้งให้ผู้ใช้บริการทราบ
-                                    และการที่ผู้ใช้บริการใช้บริการต่อไปภายหลังจากที่มีการแก้ไข
-                                    หรือเพิ่มเติมดังกล่าว ย่อมถือเป็นการยอมรับการแก้ไข
-                                    หรือเพิ่มเติมในแต่ละครั้ง
+                            <Text style={styles.textDetail}>
+                            เรียน ลูกค้าของบริษัทฯ
+                            </Text>
+                            <View style={styles.mt10}></View>
+                                <Text style={[styles.textDetail]}>
+                                บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด ("บริษัทฯ") ให้ความสำคัญกับความเป็นส่วนตัว และมุ่งมั่นที่จะคุ้มครองข้อมูลส่วนบุคคลของท่าน 
+                                ("ข้อมูลส่วนบุคคล") ตามกฎหมายไทย
                                 </Text>
+                                <View style={styles.mt10}></View>
                                 <Text style={styles.textDetail}>
-                                    1.2 เว้นแต่จะได้มีการแจ้ง หรือกําหนดไว้เป็นอย่างอื่น
-                                    คุณลักษณะใหม่ ๆ ที่ได้แก้ไข เพิ่มเติม
-                                    หรือปรับปรุงในบริการให้ถือว่าอยู่ภายใต้เงื่อนไขการให้บริการฉบับนี้ทั้งสิ้น
+                                    ประกาศความเป็นส่วนตัวฉบับนี้อธิบายถึงรายละเอียดดังต่อไปนี้:
                                 </Text>
+
+                                <View style={styles.mt10}></View>
+
+                                <FlatList
+                                    data={data}
+                                    renderItem={({ item, index }) => (
+                                        <View style={styles.listItem}>
+                                            <Text style={styles.number}>{index + 1}.</Text>
+                                            <Text style={styles.textDetail}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+
+                                
                             </View>
 
                             <View>
-                                <Text style={styles.header}>2. ข้อกำหนดและเงื่อนไขการใช้บริการทั่วไป</Text>
+                                <Text style={styles.header}>1. การเก็บรวบรวมข้อมูลส่วนบุคคล</Text>
                             </View>
                             <View style={styles.mt10}>
                                 <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
+                                บริษัทฯ เก็บรวบรวมข้อมูลส่วนบุคคลหลายประเภท ขึ้นอยู่กับสถานการณ์และลักษณะของสินค้า บริการ และ/หรือ ธุรกรรมของท่าน ข้อมูลอาจได้รับจากหลายแหล่ง เช่น:
                                 </Text>
+                                <View style={styles.mt10}></View>
+                                <FlatList
+                                    data={data2}
+                                    renderItem={({ item, index }) => (
+                                        <View style={styles.listItem}>
+                                            <Text style={styles.number}>{index + 1}.</Text>
+                                            <Text style={styles.textDetail}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
                                 <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
+                                    ข้อมูลส่วนบุคคลที่บริษัทฯ ประมวลผลประกอบด้วย (แต่ไม่จำกัดเพียง):
                                 </Text>
-                            </View>
-
-
-                            <View>
-                                <Text style={styles.header}>1. ข้อกําหนดทั่วไป</Text>
-                            </View>
-                            <View style={styles.mt10}>
-                                <Text style={styles.textDetail}>
-                                    1.1
-                                    ผู้ใช้บริการตกลงที่จะปฏิบัติและผูกพันตามเงื่อนไขการให้บริการ
-                                    ซึ่งการใช้บริการของผู้ใช้บริการถือเป็นการยอมรับเงื่อนไขการให้บริการนี้
-                                    โดยบริษัทอาจแก้ไข หรือเพิ่มเติมเงื่อนไขการให้บริการได้
-                                    ไม่ว่าในเวลาใด โดยบริษัทจะแจ้งให้ผู้ใช้บริการทราบ
-                                    และการที่ผู้ใช้บริการใช้บริการต่อไปภายหลังจากที่มีการแก้ไข
-                                    หรือเพิ่มเติมดังกล่าว ย่อมถือเป็นการยอมรับการแก้ไข
-                                    หรือเพิ่มเติมในแต่ละครั้ง
-                                </Text>
-                                <Text style={styles.textDetail}>
-                                    1.2 เว้นแต่จะได้มีการแจ้ง หรือกําหนดไว้เป็นอย่างอื่น
-                                    คุณลักษณะใหม่ ๆ ที่ได้แก้ไข เพิ่มเติม
-                                    หรือปรับปรุงในบริการให้ถือว่าอยู่ภายใต้เงื่อนไขการให้บริการฉบับนี้ทั้งสิ้น
-                                </Text>
+                                <View style={styles.mt10}></View>
+                                <FlatList
+                                    data={data3}
+                                    renderItem={({ item, index }) => (
+                                        <View style={styles.listItem}>
+                                            <Text style={styles.number}>{index + 1}.</Text>
+                                            <Text style={styles.textDetail}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
                             </View>
 
                             <View>
-                                <Text style={styles.header}>2. ข้อกำหนดและเงื่อนไขการใช้บริการทั่วไป</Text>
+                                <Text style={styles.header}>2. การใช้ข้อมูลส่วนบุคคล</Text>
                             </View>
                             <View style={styles.mt10}>
                                 <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
+                                บริษัทฯ ใช้ข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ที่ชัดเจนและสอดคล้องตามกฎหมาย เช่น:
                                 </Text>
-                                <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
-                                </Text>
-                            </View>
+                                <View style={styles.mt10}></View>
+                                <FlatList
+                                    data={data4}
+                                    renderItem={({ item, index }) => (
+                                        <View style={styles.listItem}>
+                                            <Text style={styles.number}>{index + 1}.</Text>
+                                            <Text style={styles.textDetail}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
 
-                            <View>
-                                <Text style={styles.header}>1. ข้อกําหนดทั่วไป</Text>
-                            </View>
-                            <View style={styles.mt10}>
+                                <View style={styles.mt10}></View>
                                 <Text style={styles.textDetail}>
-                                    1.1
-                                    ผู้ใช้บริการตกลงที่จะปฏิบัติและผูกพันตามเงื่อนไขการให้บริการ
-                                    ซึ่งการใช้บริการของผู้ใช้บริการถือเป็นการยอมรับเงื่อนไขการให้บริการนี้
-                                    โดยบริษัทอาจแก้ไข หรือเพิ่มเติมเงื่อนไขการให้บริการได้
-                                    ไม่ว่าในเวลาใด โดยบริษัทจะแจ้งให้ผู้ใช้บริการทราบ
-                                    และการที่ผู้ใช้บริการใช้บริการต่อไปภายหลังจากที่มีการแก้ไข
-                                    หรือเพิ่มเติมดังกล่าว ย่อมถือเป็นการยอมรับการแก้ไข
-                                    หรือเพิ่มเติมในแต่ละครั้ง
-                                </Text>
-                                <Text style={styles.textDetail}>
-                                    1.2 เว้นแต่จะได้มีการแจ้ง หรือกําหนดไว้เป็นอย่างอื่น
-                                    คุณลักษณะใหม่ ๆ ที่ได้แก้ไข เพิ่มเติม
-                                    หรือปรับปรุงในบริการให้ถือว่าอยู่ภายใต้เงื่อนไขการให้บริการฉบับนี้ทั้งสิ้น
-                                </Text>
-                            </View>
-
-                            <View>
-                                <Text style={styles.header}>2. ข้อกำหนดและเงื่อนไขการใช้บริการทั่วไป</Text>
-                            </View>
-                            <View style={styles.mt10}>
-                                <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
-                                </Text>
-                                <Text style={styles.textDetail}>
-                                2.1.1 ผู้ใช้บริการที่มีสัญชาติไทย ต้องกรอกชื่อ-นามสกุล มล หมายเลขโทรศัพท์เคลื่อนที่ ที่อยู่ อาชีพ สถานที่ทำงน วันเดือนปีเกิด และเลขประจำตัวประชาชนของตนเอง
-                                รวมทั้งข้อมูลอื่น ๆ ตามที่บริษัทกำหนด หรือจะกำหนดต่อไป เพื่อให้เป็นไปตามวัตถุประสงค์ในการให้บริการของบริษัทและ/หรือกฎหมายที่เกี่ยวข้อง
+                                ในกรณีที่บริษัทฯ อาศัยฐานผลประโยชน์อันชอบธรรมในการประมวลผลข้อมูล บริษัทฯ 
+                                จะพิจารณาว่าผลประโยชน์ดังกล่าวมีความสำคัญกว่าสิทธิของท่าน และจะประมวลผลเฉพาะที่จำเป็นและเหมาะสมเท่านั้น
                                 </Text>
                             </View>
 
                         </View>
 
                     </View>
-                </View>
-            </ScrollView>
+    );
+
+    return (
+        <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
+            <Stack.Screen
+                    options={{
+                        headerTransparent: true,
+                        headerTitle: 'นโยบายความเป็นส่วนตัว',
+                        headerTitleAlign: 'center', // Center the header title
+                        headerTitleStyle: {
+                            color: 'black',
+                            fontFamily: 'Prompt_500Medium',
+                            fontSize: 17,
+                        },
+                        headerStyle: {
+                            backgroundColor: '#fff', // Set the background color here
+                        },
+                        headerLeft: () => (
+                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
+                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+                                    <Ionicons name="chevron-back" size={20} color="black" />
+                                </View>
+                            </TouchableOpacity>
+                        ),
+                    }}
+                />
+            <StatusBar style="dark" />
+            <FlatList
+                ListHeaderComponent={renderContent}
+                data={[]} // ใส่ข้อมูลที่นี่ ถ้าต้องการเพิ่มรายการอื่น
+                renderItem={() => null} // ไม่มีข้อมูลเพิ่มเติม
+            />
+            
         </SafeAreaProvider>
     )
 }
@@ -155,12 +193,32 @@ const Policy = () => {
 export default Policy
 
 const styles = StyleSheet.create({
-
+    backIcon: {
+        backgroundColor: 'rgba(50, 209, 145, 0.2)',
+        padding: 3,
+        borderRadius: 50,
+    },
     container: {
         padding: 20,
+        backgroundColor: '#fff',
+        marginTop: Platform.select({
+            ios: 80,
+            android: 75,
+        }),
+        flex: 1,
+    },
+    listItem: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 10,
+    },
+    number: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginRight: 6,
     },
     header: {
-        fontSize: 16, 
+        fontSize: 17, 
         fontFamily: 'Prompt_500Medium'
     },
     mt10: {
@@ -168,7 +226,8 @@ const styles = StyleSheet.create({
     },
     textDetail: {
         fontSize: 14, 
-        fontFamily: 'Prompt_400Regular'
+        fontFamily: 'Prompt_400Regular',
+        flexShrink: 1,
     },
     textListHead2: {
         display: 'flex',

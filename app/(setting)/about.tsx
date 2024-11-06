@@ -1,6 +1,6 @@
 import { Image, View, Text, StyleSheet, Platform, TextInput, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Link, useNavigation, router } from 'expo-router';
+import { Link, useNavigation, router, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,33 +15,63 @@ import { FontAwesome } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 
 const About = () => {
+    const navigation = useNavigation(); // For Back button functionality
+    
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
-            <StatusBar style="dark" />
+            <Stack.Screen
+                    options={{
+                        headerTransparent: true,
+                        headerTitle: 'เกี่ยวกับเรา',
+                        headerTitleAlign: 'center', // Center the header title
+                        headerTitleStyle: {
+                            color: 'black',
+                            fontFamily: 'Prompt_500Medium',
+                            fontSize: 17,
+                        },
+                        headerStyle: {
+                            backgroundColor: '#fff', // Set the background color here
+                        },
+                        headerLeft: () => (
+                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
+                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+                                    <Ionicons name="chevron-back" size={20} color="black" />
+                                </View>
+                            </TouchableOpacity>
+                        ),
+                    }}
+                />
             <ScrollView>
-                <View style={styles.listItemCon}>
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Link href="/(tabs)/profile" style={{ padding: 10 }}>
-                            <Ionicons name="chevron-back" size={30} color="black" />
-                        </Link>
-                        <View style={styles.textListHead} >
-                            <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium' }}>About Us</Text>
-                        </View>
-                        <View >
-                            <Ionicons style={{ padding: 10 }} name="notifications-outline" size={27} color="black" />
-                        </View>
-                    </View>
-                </View>
-                <View>
+                <View style={styles.container}>
                     <View style={{ marginTop: 0, }}>
 
                         <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../assets/images/about/111879_0.jpg')}
-                            style={{ width: 360, height: 526 }} />
+                            <Image source={require('../../assets/images/about/man_about.webp')}
+                            style={{ width: width, height: width }} />
                         </View>
-                        <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../assets/images/about/111878_0.jpg')}
-                            style={{ width: 360, height: 664 }} />
+                        <View style={styles.mt_20}>
+                            <Text style={styles.header}>บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด</Text>
+                            <Text style={styles.textDetail}>
+                            บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด ผู้นำด้านการจัดส่งพัสดุด่วนในประเทศไทย 
+                            ก่อตั้งขึ้นในปี พ.ศ. 2549 เราให้ความสำคัญกับการพัฒนาบุคลากรและเทคโนโลยีอย่างต่อเนื่อง 
+                            เพื่อมอบประสบการณ์การส่งพัสดุที่ดีที่สุดให้แก่ลูกค้า
+                            </Text>
+                            <Text style={styles.textDetail}>
+                                ปัจจุบันบริษัทมีจุดบริการอยู่ทั่วประเทศไทย ครอบคลุมทุกพื้นที่ในประเทศ
+                                เราสามารถรองรับการจัดส่งพัสดุได้ตามจำนวนที่ลูกค้าต้องการ 
+                                เพื่อตอบสนองการเติบโตของธุรกิจอีคอมเมิร์ซและธุรกิจอื่นๆ เช่น ธุรกิจค้าปลีกและค้าส่ง 
+                                ซึ่งเป็นกลุ่มธุรกิจที่มีส่วนช่วยกระตุ้นเศรษฐกิจไทยให้เติบโตอย่างยั่งยืน
+                            </Text>
+
+                            <Text style={styles.textDetail}>
+                            บริษัทของเรามุ่งมั่นที่จะให้บริการที่มีคุณภาพสูง เพื่อยกระดับคุณภาพชีวิตของสังคมส่วนรวม 
+                            พร้อมทั้งให้ความใส่ใจต่อพนักงาน และมีความรับผิดชอบต่อผู้มีส่วนได้เสียและนักลงทุน
+                            </Text>
+
+                            <Text style={styles.textDetail}>
+                            เราเต็มใจที่จะเป็นผู้ประกอบการด้านการจัดส่งพัสดุด่วนชั้นนำในประเทศไทย 
+                            โดยมุ่งเน้นการให้บริการที่ดีเลิศและเหนือความคาดหวังของลูกค้า
+                            </Text>
                         </View>
                         
 
@@ -55,20 +85,40 @@ const About = () => {
 export default About
 
 const styles = StyleSheet.create({
-
+    backIcon: {
+        backgroundColor: 'rgba(50, 209, 145, 0.2)',
+        padding: 3,
+        borderRadius: 50,
+    },
     container: {
         padding: 20,
+        backgroundColor: '#fff',
+        marginTop: Platform.select({
+            ios: 80,
+            android: 75,
+        }),
+        flex: 1,
+    },
+    mt_20:{
+        marginTop: 15
     },
     header: {
-        fontSize: 16, 
-        fontFamily: 'Prompt_500Medium'
+        color: '#093250',
+        fontSize: 18, 
+        fontFamily: 'Prompt_500Medium',
+        textAlign: 'center'
     },
+    
     mt10: {
         marginTop: 10
     },
     textDetail: {
         fontSize: 14, 
-        fontFamily: 'Prompt_400Regular'
+        fontFamily: 'Prompt_400Regular',
+         textAlign: 'center',
+         color: '#595a5c',
+         marginTop: 10,
+         lineHeight: 20
     },
     textListHead2: {
         display: 'flex',

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Image, Text, View, StyleSheet, Platform, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { Image, Text, View, RefreshControl, StyleSheet, Platform, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link, useNavigation, router, Stack } from 'expo-router';
@@ -83,20 +83,22 @@ export default function History() {
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false); // Track loading state
   const [filteredData, setFilteredData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false); // Track refresh state
 
-  // Fetch data initially
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/getHistory');
+      setData(response.data?.order || []);
+      setFilteredData(response.data?.order || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/getHistory');
-        setData(response.data?.order || []);
-        setFilteredData(response.data?.order || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
@@ -106,6 +108,13 @@ export default function History() {
       item.code_order.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(filtered);
+  };
+
+  // Refresh the FlatList data
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData(); // Fetch data again to refresh
+    setRefreshing(false);
   };
 
   if (loading) {
@@ -123,26 +132,30 @@ export default function History() {
         headerTitle: 'History',
         headerTitleAlign: 'center',
         headerTitleStyle: {
-          color: '#000', // กำหนดสีของ headerTitle
+          color: '#fff', // กำหนดสีของ headerTitle
           fontFamily: 'Prompt_500Medium', // กำหนดฟอนต์
           fontSize: 18,
         },
       }} />
+
+<View style={styles.orangeBackground}>
+      
+      <View style={styles.inputContainer}>
+                <TextInput 
+                    placeholder="Enter the receipt number" 
+                    style={styles.input} 
+                    value={searchInput}
+                    onChangeText={handleSearch}
+                  />
+                  <Feather style={styles.searchIcon} name="search" size={24} color="gray" />
+            </View>
+            
+            </View>
+            
+            
       <View style={styles.container}>
         <FlatList
-          ListHeaderComponent={
-
-            <View style={styles.searchSection}>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter the receipt number"
-                value={searchInput}
-                onChangeText={handleSearch}
-              />
-              <Feather style={styles.searchIcon} name="search" size={24} color="gray" />
-            </View>
-
-          }
+        
           data={filteredData}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()} // Ensure id is a string
@@ -153,6 +166,9 @@ export default function History() {
               <Text style={styles.emptyText}>No orders found</Text>
             )
           }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       </View>
     </SafeAreaProvider>
@@ -160,6 +176,32 @@ export default function History() {
 }
 
 const styles = StyleSheet.create({
+  orangeBackground: {
+    backgroundColor: '#121f43', // Adjust to match the exact orange color you want
+    padding: 20, // Adjust this to control height of orange section
+    paddingBottom: 1,
+    paddingTop: Platform.select({
+      ios: 80,
+      android: 75,
+  }),
+},
+inputContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#fff',
+  borderRadius: 50,
+  borderWidth: 1,
+  borderColor: '#ddd',
+  paddingHorizontal: 15,
+  marginVertical: 5,
+  marginBottom: 20,
+},
+input: {
+  flex: 1,
+  height: 47, // Set the desired height here
+  fontSize: 14,
+  paddingVertical: 10, // Optional: adjusts vertical padding for better text alignment
+},
   headOrderCode: {
     display: 'flex',
     flexDirection: 'column',
@@ -233,18 +275,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  searchSection: {
-    marginTop: 15,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0.5,
-    borderColor: '#999',
-    borderRadius: 50,
-    paddingHorizontal: 12,
-    marginBottom: 20,
-  },
+
   section: {
     marginTop: 10,
     marginBottom: 15
@@ -297,16 +328,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchIcon: {
-    padding: 10,
+    padding: 0,
   },
-  input: {
-    flex: 1,
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    paddingLeft: 10,
-    color: '#424242',
-  },
+  
   TextInput: {
     padding: 7,
     paddingHorizontal: 5,
@@ -365,12 +389,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   container: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
     padding: 10,
-    paddingHorizontal: 12,
-    marginTop: Platform.select({
-      ios: 65,
-      android: 65,
-    }),
+    paddingHorizontal: 15,
   },
   boxlist: {
     borderRadius: 10,

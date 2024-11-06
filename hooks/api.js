@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 // Create Axios instance
 const api = axios.create({
-  baseURL: 'https://170e-124-120-218-0.ngrok-free.app/api',
+  baseURL: 'https://api.loadmasterth.com/api',
 });
 
 // Configure retry logic
@@ -27,7 +27,7 @@ const refreshToken = async () => {
 
     // Request new token using refresh token
     const response = await axios.post(
-      'https://170e-124-120-218-0.ngrok-free.app/api/refresh-token',
+      'https://api.loadmasterth.com/api/refresh-token',
       {},
       {
         headers: { Authorization: `Bearer ${storedRefreshToken}` },

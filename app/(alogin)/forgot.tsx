@@ -23,7 +23,7 @@ export default function Verify() {
         
         try {
 
-            const response = await axios.post('https://170e-124-120-218-0.ngrok-free.app/api/reverify', {
+            const response = await axios.post('https://api.loadmasterth.com/api/reverify', {
                 phone_number: '+66'+form.phone, // Phone number from params
               });
 
@@ -33,7 +33,7 @@ export default function Verify() {
                 // ค่าแสดงว่าเกิน 3 นาทีแล้ว
 
                 Alert.alert('Success', 'OTP has been resent!');
-                router.push({ pathname: '(alogin)/resetpass', params: { phone: response.data.phone_number } });
+                router.push({ pathname: '(alogin)/verifyPass', params: { phone: response.data.phone_number } });
               } else if (response.data.pass == 0) {
                 // ค่าแสดงว่ายังไม่เกิน 3 นาที
                 Alert.alert('Wait', 'Please wait a few minutes before requesting again.');

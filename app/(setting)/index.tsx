@@ -115,6 +115,7 @@ const EditProfile = () => {
                 style={styles.inputControl}
                 value={form.phone}
                 onChangeText={(phone) => setForm({ ...form, phone })}
+                editable={false}
               />
             </View>
 

@@ -5,9 +5,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useRouter, useLocalSearchParams, Link } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Verify() {
+
+export default function VerifyPass() {
     const navigation = useNavigation();
     const inputRefs = useRef([]); // Array of refs for OTP inputs
     const [otp, setOtp] = useState(new Array(6).fill('')); // OTP stored as an array of 6 characters
@@ -75,44 +75,22 @@ export default function Verify() {
       setLoading(true); // Show loading state
   
       try {
-        // Clear existing session data
-        await AsyncStorage.removeItem('jwt_token');
-        await AsyncStorage.removeItem('refresh_token');
-        await AsyncStorage.removeItem('user_profile');
-
-        console.log('otp', phone);
   
         // Make the API call to verify the OTP
-        const response = await axios.post('https://api.loadmasterth.com/api/verify', {
+        const response = await axios.post('https://api.loadmasterth.com/api/sendOtp', {
           verification_code: otp.join(''), // Send OTP as a single string
           phone_number: phone, // Phone number from params
         });
-  
-        console.log('response', response.data);
-  
-        if (response.data.token) {
-          // Extract tokens and user profile from the response
-          const token = response.data.token;
-          const refreshToken = response.data.token;
-          const userProfile = response.data.user;
 
-          console.log('token', token, 'refreshToken', refreshToken, 'userProfile', userProfile);
-  
-          // Ensure tokens and user data are valid before storing
-          if (token && refreshToken && userProfile) {
-            // Store tokens and user data in AsyncStorage
-            await AsyncStorage.setItem('jwt_token', token);
-            await AsyncStorage.setItem('refresh_token', refreshToken);
-            await AsyncStorage.setItem('user_profile', JSON.stringify(userProfile));
-  
-            Alert.alert('Success', 'Verification successful!');
-            router.push('(tabs)'); // Navigate to the main app screen
-          } else {
-            Alert.alert('Error', 'Invalid token or user data received.');
-          }
-        } else {
-          Alert.alert('Error', 'Invalid verification code.');
+        if (response.data.success === true) {
+
+            router.push({ pathname: 'resetpass', params: { phone: phone } });
+
+        }else{
+            Alert.alert('เกิดข้อผิดพลาด', 'OTP ไม่ตรงกับระบบที่ส่งให้ '+ phone);
         }
+
+
       } catch (error) {
         console.error('Error during verification:', error);
         Alert.alert('Error', 'Something went wrong, please try again.');

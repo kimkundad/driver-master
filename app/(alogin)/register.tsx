@@ -50,14 +50,14 @@ export default function Register() {
 
     try {
       // API call to register the user
-      const response = await axios.post('https://170e-124-120-218-0.ngrok-free.app/api/register', {
+      const response = await axios.post('https://api.loadmasterth.com/api/register', {
         phone,
         name,
         password,
         c_password: confirmPassword,
         role:4
       });
-      // console.log('response', response)
+       console.log('response', response.data)
       if (response.data.success) {
         
         Alert.alert('Success', 'Registration successful!');

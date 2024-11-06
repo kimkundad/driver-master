@@ -1,6 +1,6 @@
 import { Image, View, Text, StyleSheet, Platform, TextInput, Linking, Alert, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Link, useNavigation, router } from 'expo-router';
+import { Link, useNavigation, router, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -67,34 +67,48 @@ const handlePress = async () => {
 
 
 const Helpcen = () => {
+
+    const navigation = useNavigation(); // For Back button functionality
+
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
+            <Stack.Screen
+                    options={{
+                        headerTransparent: true,
+                        headerTitle: 'Help Cente',
+                        headerTitleAlign: 'center', // Center the header title
+                        headerTitleStyle: {
+                            color: 'black',
+                            fontFamily: 'Prompt_500Medium',
+                            fontSize: 17,
+                        },
+                        headerStyle: {
+                            backgroundColor: '#fff', // Set the background color here
+                        },
+                        headerLeft: () => (
+                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
+                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+                                    <Ionicons name="chevron-back" size={20} color="black" />
+                                </View>
+                            </TouchableOpacity>
+                        ),
+                    }}
+                />
             <StatusBar style="dark" />
             <ScrollView>
-                <View style={styles.listItemCon}>
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Link href="/(tabs)/profile" style={{ padding: 10 }}>
-                            <Ionicons name="chevron-back" size={30} color="black" />
-                        </Link>
-                        <View style={styles.textListHead} >
-                            <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium' }}>Help Center</Text>
-                        </View>
-                        <View >
-                            <Ionicons style={{ padding: 10 }} name="notifications-outline" size={27} color="black" />
-                        </View>
-                    </View>
-                </View>
+               
+               
                 <View>
                     <View style={{ marginTop: 0, }}>
 
                         <View style={styles.container}>
 
                         <View style={{ alignItems: 'center' }}>
-                        <Image source={require('../../assets/images/help.png')}
-                            style={{ width: 360, height: 202 }} />
+                        <Image source={require('../../assets/images/help_center.webp')}
+                            style={{ width: 360, height: 202, marginBottom: 10, borderRadius: 8 }} />
                             <View>
                                 <Text style={{ 
-                    color:Colors.black, fontSize:18, fontFamily: 'Prompt_500Medium', marginTop: 10, marginBottom: 20
+                    color:Colors.black, fontSize:17, fontFamily: 'Prompt_500Medium', marginTop: 10, marginBottom: 20
                     }}>
                                     อยากให้เราช่วยเรื่องอะไร บอกมาได้เลย
                                 </Text>
@@ -178,8 +192,19 @@ export default Helpcen
 
 const styles = StyleSheet.create({
 
+    backIcon: {
+        backgroundColor: 'rgba(50, 209, 145, 0.2)',
+        padding: 3,
+        borderRadius: 50,
+    },
     container: {
         padding: 20,
+        backgroundColor: '#fff',
+        marginTop: Platform.select({
+            ios: 80,
+            android: 75,
+        }),
+        flex: 1,
     },
     textListHead2: {
         display: 'flex',
