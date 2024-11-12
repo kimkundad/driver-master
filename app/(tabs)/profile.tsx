@@ -168,6 +168,8 @@ export default function Profile() {
 
 
             <View style={{ alignItems: 'center', paddingTop: 15 }}>
+
+              
               {/* Container for image and edit button */}
               <View style={{ position: 'relative' }}>
                 {/* Profile Image */}
