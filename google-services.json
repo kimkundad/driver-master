@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621361222772",
+    "project_id": "loadmaster-6d949",
+    "storage_bucket": "loadmaster-6d949.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621361222772:android:fc7e701f9bcde160526d21",
+        "android_client_info": {
+          "package_name": "com.kimkundad.drivermaster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2FjxuVtyX_Baw1Qb350yzOAlNLURuPvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

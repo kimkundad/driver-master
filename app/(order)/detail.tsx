@@ -27,6 +27,7 @@ export default function Tracking() {
   const [carTack, setCarTack] = useState({ latitude: 0, longitude: 0 }); // เก็บตำแหน่งปลายทาง
 
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const toggleSwitch = async () => {
     const newStatus = !isEnabled;
@@ -37,7 +38,7 @@ export default function Tracking() {
             id: order?.id,
             newStatus: newStatus ? 'เปิด' : 'ปิด' // เปลี่ยนข้อความตามที่คุณต้องการในฐานข้อมูล
         });
-        console.log('API Response:', response.data); // Log ข้อมูลจาก API
+      //  console.log('API Response:', response.data); // Log ข้อมูลจาก API
     } catch (error) {
         console.error('API Error:', error.toJSON());
         Alert.alert('ข้อผิดพลาด', error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
@@ -51,13 +52,13 @@ export default function Tracking() {
   useEffect(() => {
     // ตรวจสอบว่ามี id หรือไม่ก่อนที่จะดึงข้อมูล
     if (!id) return;
-    console.log('id-->', id)
+  //  console.log('id-->', id)
     // ฟังก์ชัน async ที่จะเรียก API
     const fetchOrder = async () => {
       try {
         const response = await api.get(`/getOrderByIDDri/${id}`); // เรียก API เพื่อดึง order ข้อมูลผู้ใช้
         const orderData = response.data.order;
-        console.log('data-->', orderData?.status_dri)
+      //  console.log('data-->', orderData?.status_dri)
         setData(orderData); // ตั้งค่า order ที่ได้รับจาก API
         setImgS1(response?.data?.img);
         setImgS2(response?.data?.img2);
@@ -87,6 +88,12 @@ export default function Tracking() {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
+  // ใช้ useEffect เพื่อดูการเปลี่ยนแปลงของ isMapVisible
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMapVisible(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handlePress = async () => {
     if (order?.phone_re) {
       const url = `tel:${order?.phone_re}`;
@@ -105,13 +112,13 @@ export default function Tracking() {
   const handleCancel = async () => {
     setLoading(true);
     if (!id) return;
-    console.log('id-->', id)
+  //  console.log('id-->', id)
 
     try {
 
       const formData = new FormData();
       formData.append('id', id);
-      console.log('formData data ', formData)
+    //  console.log('formData data ', formData)
 
       const response = await api.post('/postCancelDanger', formData, {
         headers: {
@@ -131,7 +138,7 @@ export default function Tracking() {
       }
 
     } catch (error) {
-      console.error('API Error:', error.toJSON()); // Log detailed error info
+     // console.error('API Error:', error.toJSON()); // Log detailed error info
       Alert.alert('ข้อผิดพลาด', error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
     } finally {
       setLoading(false);
@@ -145,14 +152,14 @@ export default function Tracking() {
       const formData = new FormData();
       formData.append('id', id);
 
-      console.log('Sending FormData:', formData);
+    //  console.log('Sending FormData:', formData);
 
       const response = await api.post('/postStatusDri', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('API Response:', response.data);
+   //   console.log('API Response:', response.data);
 
       if (response.data.success === true) {
         router.push('(order)/success');
@@ -226,51 +233,32 @@ export default function Tracking() {
 
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#f5f5f5' }} >
-      <Stack.Screen options={{
-        headerTransparent: true,
-        headerTitle: '' + order?.code_order,
-        headerTitleAlign: 'center', // Center the header title
-        headerTitleStyle: {
-          color: 'black', // กำหนดสีของ headerTitle
-          fontFamily: 'Prompt_500Medium', // กำหนดฟอนต์
-          fontSize: 16
-        },
-        contentStyle: {
-          backgroundColor: 'white', // เพิ่มพื้นหลังสีขาวให้กับหน้าจอ
-        },
-        headerLeft: () => (
-          <TouchableOpacity style={styles.backIcon} onPress={() =>
-            router.push({
-              pathname: '(tabs)',
-              params: { id: id }, // Pass the branch id as a parameter
-            })
-          }>
-            <View
-              style={{
-                backgroundColor: Colors.white,
-                padding: 6,
-                borderRadius: 50
-              }}
-            >
-              <Ionicons name="chevron-back" size={20} color="black" />
-            </View>
-          </TouchableOpacity>
-        ),
+      
+      <StatusBar style="dark" />
 
-      }} />
+      <View style={styles.backButtonContainer}>
+              
+              <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 1)',
+                                        padding: 5,
+                                        borderRadius: 25
+                                    }}
+                                >
+                                    <Ionicons name="chevron-back" size={20} color="black" />
+                                </View>
+                            </TouchableOpacity>
+            </View>
 
       <ScrollView>
 
-        <View style={{
-          marginTop: Platform.select({
-            ios: 80,
-            android: 75,
-          }),
-        }}></View>
+       
 
         {destination && (
           <View>
 
+{isMapVisible && destination && (
             <MapView
               initialRegion={{
                 latitude: 13.7758339,
@@ -314,7 +302,7 @@ export default function Tracking() {
 
 
             </MapView>
-
+)}
 
           </View>
         )}
@@ -587,6 +575,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  btnBack: {
+    backgroundColor: 'rgba(0, 19, 255, 0.2)',
+    borderRadius: 10,
+    padding: 4,
+    alignItems: 'center',
   },
   textListHead2: {
     display: 'flex',

@@ -3,6 +3,7 @@
     "name": "Driver Master",
     "slug": "gps-app",
     "version": "1.0.0",
+    "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -10,33 +11,38 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#121F43"
     },
     "ios": {
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
       },
-      "permissions": ["CAMERA"] 
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to your camera for scanning."
+      }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#121F43"
       },
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE_LOCATION",
         "FOREGROUND_SERVICE",
-        "CAMERA"  
+        "WAKE_LOCK",
+        "CAMERA"
       ],
+      "package": "com.kimkundad.drivermaster",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
+          "apiKey": "AIzaSyCsx9tQ2Mj7WWnunxa8P2blQLcGtjroLVE"
         }
-      },
-      "package": "com.kimkundad.drivermaster"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -44,11 +50,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Driver Master to always access your location in the background.",
+          "locationWhenInUsePermission": "Allow Driver Master to access your location when the app is in use.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ]
     ],

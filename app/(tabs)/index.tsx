@@ -11,6 +11,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import DeviveryStatus from '../../components/DeviveryStatus';
 import { StatusBar } from 'expo-status-bar';
+import { io } from "socket.io-client";
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -23,45 +24,47 @@ if (!TaskManager.isTaskDefined(LOCATION_TASK_NAME)) {
     }
 
     if (data) {
-
-      console.log('Task locations');
       const { locations } = data;
-      const { latitude, longitude } = locations[0].coords;
-      console.log('Background location:', latitude, longitude);
+      if (locations && locations.length > 0) {
+        const { latitude, longitude } = locations[0].coords;
+        console.log('Background location:-->', latitude, longitude);
 
-      // Send the location to your API
-      await sendLocationToApi(latitude, longitude);
+        try {
+          
+          // ใช้ข้อความที่เหมาะสมใน Alert
+          // Alert.alert(
+          //   'Location Update',
+          //   `Latitude: ${latitude}, Longitude: ${longitude}`
+          // );
+
+          console.log('sendLocationToApi-->');
+          await sendLocationToApi(latitude, longitude);
+        } catch (e) {
+          console.error('Error sending location to API:', e);
+        }
+      }
     }
   });
-  console.log('Task defined successfully');
-} else {
-  console.log('Task already defined');
 }
 
 
 // Function to send location to the API
 const sendLocationToApi = async (latitude, longitude) => {
-  const form = {
-    latitude,
-    longitude,
-  };
-  console.log('form', form);
   try {
-    const response = await api.post('/myLocation', form);
-    console.log('response', response.data);
-    // if (response.status === 200) {
-    //   Alert.alert('สำเร็จ', 'ส่งพิกัดไปยัง api แล้ว');
-    // } else {
-    //   Alert.alert('ข้อผิดพลาด', 'ไม่สามารถส่งพิกัดไปยัง api ได้');
-    // }
+    const response = await api.post('/myLocation', { latitude, longitude });
+    if (response.status === 200) {
+      console.log('Location sent successfully');
+    } else {
+      console.error('Failed to send location');
+    }
   } catch (error) {
-    Alert.alert('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการส่งพิกัด');
     console.error('Error sending location:', error);
   }
 };
 
 
 export default function HomeScreen({ navigation }) {
+
   const { userProfile } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [dataDoc, setDataDoc] = useState(null);
@@ -69,99 +72,107 @@ export default function HomeScreen({ navigation }) {
   const [searchInput, setSearchInput] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    console.log('onRefresh')
+ // Request Permissions and Start Background Location Updates
+ const startBackgroundLocationTracking = async () => {
+  try {
+    const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+    if (foregroundStatus !== 'granted') {
+      Alert.alert('Permission Denied', 'Foreground location access is required.');
+      return;
+    }
+
+    const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+    if (backgroundStatus !== 'granted') {
+      Alert.alert('Permission Denied', 'Background location access is required.');
+      return;
+    }
+
+    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+      accuracy: Location.Accuracy.High,
+      distanceInterval: 5000,
+      foregroundService: {
+        notificationTitle: 'Location Tracking Active',
+        notificationBody: 'Tracking your location in the background',
+      },
+    });
+    console.log('Background location tracking started');
+  } catch (error) {
+    console.error('Error starting location tracking:', error);
+  }
+};
+
+// Stop Background Location Updates
+const stopBackgroundLocationTracking = async () => {
+  try {
+    const isRunning = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+    if (isRunning) {
+      await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      console.log('Background location tracking stopped');
+    }
+  } catch (error) {
+    console.error('Error stopping location updates:', error);
+  }
+};
+
+  
+
+  // Fetch orders
+  const fetchOrders = async () => {
     try {
-      // Re-fetch data on refresh
       const response = await api.get('/getOrderDri');
       setData(response.data?.order || []);
       setFilteredData(response.data?.order || []);
     } catch (error) {
-      console.error('Error refreshing data:', error);
-    } finally {
-      setRefreshing(false);
+      console.error('Error fetching orders:', error);
     }
   };
 
-  useEffect(() => {
-    const startBackgroundLocationTracking = async () => {
-      // Request foreground permission first
-      const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-      if (foregroundStatus !== 'granted') {
-        Alert.alert('Permission Denied', 'Permission to access location in the foreground was denied');
-        return;
-      }
-      console.log('Foreground permission granted');
+   // Socket Management
+   useEffect(() => {
+    const socket = io('https://chat.loadmasterth.com', {
+      transports: ['websocket'],
+    });
 
-      // Request background permission
-      const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-      console.log('Background permission status:', backgroundStatus);
-      if (backgroundStatus !== 'granted') {
-        Alert.alert('Permission Denied', 'Permission to access location in the background was denied');
-        return;
-      }
-      console.log('Background permission granted');
+    socket.on('connect', () => {
+      console.log('Socket connected');
+    });
 
-      // Start background location updates
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.High,
-        distanceInterval: 40,
-        foregroundService: {
-          notificationTitle: 'Location Tracking Active',
-          notificationBody: 'We are tracking your location in the background',
-        },
+    socket.on('order-update', (updatedOrder) => {
+      setFilteredData((prevOrders) => {
+        const existingOrder = prevOrders.find((order) => order.id === updatedOrder.id);
+        if (existingOrder) {
+          return prevOrders.map((order) =>
+            order.id === updatedOrder.id ? updatedOrder : order
+          );
+        }
+        return [...prevOrders, updatedOrder];
       });
-      console.log('Background location tracking started');
-    };
+    });
 
-    // Check platform and start tracking location
-    if (Platform.OS === 'android' || Platform.OS === 'ios') {
-      startBackgroundLocationTracking();
-    }
-
-    // Stop tracking when the component unmounts
     return () => {
-      if (TaskManager.isTaskDefined(LOCATION_TASK_NAME)) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME)
-          .then(() => console.log('Background location updates stopped'))
-          .catch((error) => console.error('Error stopping background location updates:', error));
-      } else {
-        console.log('Task not found, cannot stop location updates');
-      }
+      socket.disconnect();
+      console.log('Socket disconnected');
     };
   }, []);
 
 
-  
-
-  // Fetch data initially
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/getOrderDri');
-        setData(response.data?.order || []);
-        setFilteredData(response.data?.order || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } 
+    startBackgroundLocationTracking();
+    fetchOrders();
+    return () => {
+      stopBackgroundLocationTracking();
     };
-    fetchData();
-
-    const fetchDoc = async () => {
-      try {
-        const response = await api.get('/getDoc');
-        console.log('response.data?.verify', response.data?.verify)
-        setDataDoc(response.data?.verify);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } 
-    };
-
-
-    fetchDoc();
   }, []);
+
+  // Refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchOrders();
+    setRefreshing(false);
+  };
+
 
   const handleSearch = (text) => {
     setSearchInput(text);
@@ -315,7 +326,7 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.flexItem}>
 
                       <View>
-                        <Text style={styles.HeadshipmentInfo}>ต้นทาง</Text>
+                        <Text style={styles.HeadshipmentInfo}>ต้นทาง {item?.dri_time}</Text>
                         <View style={styles.shipmentRow}>
                             <Ionicons name="cube-outline" size={20} color="#3858b1" />
                             <Text style={styles.shipmentInfo}>{item.province}</Text>
@@ -354,7 +365,11 @@ export default function HomeScreen({ navigation }) {
             </TouchableOpacity>
             )}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            ListEmptyComponent={<Text style={styles.emptyText}>No orders found</Text>}
+            ListEmptyComponent={
+            <View style={{ height: 400,  }}>
+            <Text style={styles.emptyText}>No orders found</Text>
+            </View>
+          }
           />
 
 

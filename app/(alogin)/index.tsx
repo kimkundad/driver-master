@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const navigation = useNavigation();
-
+  console.log('Navigation object:', navigation); // ตรวจสอบ navigation object
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);

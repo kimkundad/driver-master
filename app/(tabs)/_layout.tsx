@@ -1,12 +1,8 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Tabs } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { UserProvider } from '../../hooks/UserContext';
 
@@ -46,15 +42,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="test"
-        options={{
-          title: 'test',
-          tabBarIcon: ({ color, focused }) => (
-            <FontAwesome name="user-circle-o" size={24} color={color} />
-          ),
-        }}
-      /> */}
     </Tabs>
     </UserProvider>
   );

@@ -1,9 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState  } from 'react';
 import 'react-native-reanimated';
 import * as Font from 'expo-font';
+import { UserProvider } from '../hooks/UserContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -31,6 +31,7 @@ export default function RootLayout() {
   }
 
   return (
+    <UserProvider>
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(alogin)" options={{ headerShown: false }} />
@@ -40,5 +41,6 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
+    </UserProvider>
   );
 }
