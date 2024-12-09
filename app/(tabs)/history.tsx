@@ -12,7 +12,15 @@ const renderItem = ({ item: orders }) => (
     onPress={() => {
       router.push({
         pathname: '(order)/detail',
-        params: { id: orders.id }, // Pass the order id as a parameter
+        params: { 
+          id: orders.id,
+          xlatitude: orders.latitude,
+          xlongitude: orders.longitude,
+          xlatitude2: orders.latitude2,
+          xlongitude2: orders.longitude2,
+          xd_lat: orders.d_lat,
+          xd_long: orders.d_long,
+        }, // Pass the order id as a parameter
       });
     }}
   >
@@ -198,7 +206,7 @@ inputContainer: {
 },
 input: {
   flex: 1,
-  height: 47, // Set the desired height here
+  height: 55, // Set the desired height here
   fontSize: 14,
   paddingVertical: 10, // Optional: adjusts vertical padding for better text alignment
 },

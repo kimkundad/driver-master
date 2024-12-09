@@ -297,7 +297,15 @@ const stopBackgroundLocationTracking = async () => {
                 // Use router.push to navigate to the "(branch)/shop" route with the "id" param
                 router.push({
                   pathname: '(order)/detail',
-                  params: { id: item.id }, // Pass the branch id as a parameter
+                  params: { 
+                    id: item.id,
+                    xlatitude: item.latitude,
+                    xlongitude: item.longitude,
+                    xlatitude2: item.latitude2,
+                    xlongitude2: item.longitude2,
+                    xd_lat: item.d_lat,
+                    xd_long: item.d_long,
+                  },
                 });
               }}
               >

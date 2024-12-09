@@ -14,9 +14,11 @@ import DeviveryStatus from '../../components/DeviveryStatus';
 
 export default function Tracking() {
 
+
   const navigation = useNavigation(); // สำหรับปุ่ม Back
 
-  const { id } = useLocalSearchParams(); // รับพารามิเตอร์ id
+  const { id, xlatitude } = useLocalSearchParams(); // รับพารามิเตอร์ id
+  console.log('')
   const GOOGLE_MAPS_APIKEY = 'AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg';
 
   const [facing, setFacing] = useState<CameraType>('back');

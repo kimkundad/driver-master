@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import api from '../../hooks/api'; // Axios instance
 import * as Location from 'expo-location';
 import provinceData from '../../assets/raw/raw_database.json';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Get screen width to calculate button size for 3 columns
 const { width } = Dimensions.get('window');
@@ -269,24 +270,39 @@ const handleCreate = async () => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
-                <Stack.Screen
-                    options={{
-                        headerTransparent: true,
-                        headerTitle: ' '+textHead,
-                        headerTitleStyle: {
-                            color: 'black',
-                            fontFamily: 'Prompt_500Medium',
-                            fontSize: 18,
-                        },
-                        headerLeft: () => (
-                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
-                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+            <LinearGradient
+                    colors={['#1e3c72', '#1e3c72', '#2a5298']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.headerGradient}
+                >
+                    <View style={styles.listItemCon}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                        padding: 5,
+                                        borderRadius: 25
+                                    }}
+                                >
                                     <Ionicons name="chevron-back" size={20} color="black" />
                                 </View>
                             </TouchableOpacity>
-                        ),
-                    }}
-                />
+
+                            <View style={styles.textListHead}>
+                                <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
+                                    {textHead}
+                                </Text>
+                            </View>
+
+                            {/* ใช้ View เปล่าทางขวาเพื่อให้ไอคอน Back และ Text อยู่ตรงกลาง */}
+                            <View style={{ width: 32 }} />
+                        </View>
+
+                    </View>
+                </LinearGradient>
+               
 
                 <View style={styles.container}>
                     {/* FlatList to render camera buttons in 3 columns */}
@@ -332,13 +348,49 @@ const handleCreate = async () => {
 }
 
 const styles = StyleSheet.create({
+    headerGradient: {
+        height: 85,
+        width: '100%',
+    },
+    btnBack: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 25,
+        padding: 4,
+        alignItems: 'center',
+    },
+    textListHead: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        fontFamily: 'Prompt_400Regular',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    listItemCon: {
+        marginTop: Platform.select({
+            ios: 35,
+            android: 35,
+        }),
+        paddingHorizontal: 0,
+        // iOS shadow properties
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 1,
+        // Android shadow (elevation)
+        elevation: 10,
+    },
     container: {
         padding: 20,
-        backgroundColor: '#f5f5f5',
-        marginTop: Platform.select({
-            ios: 80,
-            android: 75,
-        }),
+        backgroundColor: '#fff',
+
         flex: 1,
     },
     textArea: {

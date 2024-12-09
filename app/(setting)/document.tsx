@@ -11,6 +11,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../../hooks/UserContext';
 import api from '../../hooks/api'; // Axios instance
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Document() {
 
@@ -68,35 +69,38 @@ export default function Document() {
 
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#f5f5f5' }} >
-            <Stack.Screen options={{
-                headerTransparent: true,
-                headerTitle: ' เอกสาร',
-                headerTitleAlign: 'center', // Center the header title
-                headerTitleStyle: {
-                    color: 'black', // กำหนดสีของ headerTitle
-                    fontFamily: 'Prompt_500Medium', // กำหนดฟอนต์
-                    fontSize: 18
-                },
-                contentStyle: {
-                    backgroundColor: 'white', // เพิ่มพื้นหลังสีขาวให้กับหน้าจอ
-                },
-                headerLeft: () => (
-                    <TouchableOpacity style={styles.backIcon}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: '#fff',
-                                padding: 6,
-                                borderRadius: 50
-                            }}
-                        >
-                            <Ionicons name="chevron-back" size={20} color="black" />
-                        </View>
-                    </TouchableOpacity>
-                ),
+            <LinearGradient
+                    colors={['#1e3c72', '#1e3c72', '#2a5298']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.headerGradient}
+                >
+                    <View style={styles.listItemCon}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <TouchableOpacity style={styles.btnBack} onPress={() => router.push('(tabs)/profile')}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                        padding: 5,
+                                        borderRadius: 25
+                                    }}
+                                >
+                                    <Ionicons name="chevron-back" size={20} color="black" />
+                                </View>
+                            </TouchableOpacity>
 
-            }} />
+                            <View style={styles.textListHead}>
+                                <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
+                                    เอกสารใช้ยืนยัน
+                                </Text>
+                            </View>
+
+                            {/* ใช้ View เปล่าทางขวาเพื่อให้ไอคอน Back และ Text อยู่ตรงกลาง */}
+                            <View style={{ width: 32 }} />
+                        </View>
+
+                    </View>
+            </LinearGradient>
 
             <View style={styles.container}>
 
@@ -144,13 +148,44 @@ export default function Document() {
 
 
 const styles = StyleSheet.create({
-    listItemCon: {
-        paddingTop: 40,
-        paddingHorizontal: 0,
-        backgroundColor: '#fff',
+    headerGradient: {
+        height: 85,
+        width: '100%',
+    },
+    btnBack: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 25,
+        padding: 4,
+        alignItems: 'center',
+    },
+    textListHead: {
+        flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
-        textAlign: 'center'
-
+        padding: 10,
+        fontFamily: 'Prompt_400Regular',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    listItemCon: {
+        marginTop: Platform.select({
+            ios: 35,
+            android: 35,
+        }),
+        paddingHorizontal: 0,
+        // iOS shadow properties
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 1,
+        // Android shadow (elevation)
+        elevation: 10,
     },
     textMenu: {
         fontFamily: 'Prompt_400Regular',
@@ -201,13 +236,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Prompt_400Regular',
         color: '#3858b1'
     },
-    textListHead: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        fontFamily: 'Prompt_400Regular',
-    },
+ 
     textSeting3: {
         fontSize: 15,
         fontFamily: 'Prompt_400Regular',
@@ -233,12 +262,10 @@ const styles = StyleSheet.create({
         paddingBottom: 12
     },
     container: {
-        padding: 10,
-        paddingHorizontal: 12,
-        marginTop: Platform.select({
-            ios: 75,
-            android: 65,
-        }),
+        padding: 20,
+        backgroundColor: '#fff',
+
+        flex: 1,
     },
     bodyContainer: {
         padding: 12,

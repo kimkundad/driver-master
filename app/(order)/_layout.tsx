@@ -8,7 +8,8 @@ export default function Layout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="detail"  options={{ headerShown: false }}/>
       <Stack.Screen name="success" options={{ headerShown: false }} />
-      <Stack.Screen name="danger"  />
+      <Stack.Screen name="danger"  options={{ headerShown: false }}/>
+      <Stack.Screen name="addPic"  options={{ headerShown: false }}/>
       <Stack.Screen name="mapsDestination" options={{ headerShown: false }} />
     </Stack>
     </UserProvider>

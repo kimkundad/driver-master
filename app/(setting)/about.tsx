@@ -1,16 +1,10 @@
 import { Image, View, Text, StyleSheet, Platform, TextInput, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Link, useNavigation, router, Stack } from 'expo-router';
-import { useEffect } from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-
 
 const { width } = Dimensions.get('window');
 
@@ -19,29 +13,40 @@ const About = () => {
     
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
-            <Stack.Screen
-                    options={{
-                        headerTransparent: true,
-                        headerTitle: 'เกี่ยวกับเรา',
-                        headerTitleAlign: 'center', // Center the header title
-                        headerTitleStyle: {
-                            color: 'black',
-                            fontFamily: 'Prompt_500Medium',
-                            fontSize: 17,
-                        },
-                        headerStyle: {
-                            backgroundColor: '#fff', // Set the background color here
-                        },
-                        headerLeft: () => (
-                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
-                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+            <StatusBar style="dark" />
+            <ScrollView>
+            <LinearGradient
+                    colors={['#1e3c72', '#1e3c72', '#2a5298']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.headerGradient}
+                >
+                    <View style={styles.listItemCon}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <TouchableOpacity style={styles.btnBack} onPress={() => router.push('(tabs)/profile')}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                        padding: 5,
+                                        borderRadius: 25
+                                    }}
+                                >
                                     <Ionicons name="chevron-back" size={20} color="black" />
                                 </View>
                             </TouchableOpacity>
-                        ),
-                    }}
-                />
-            <ScrollView>
+
+                            <View style={styles.textListHead}>
+                                <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
+                                    เกี่ยวกับเรา
+                                </Text>
+                            </View>
+
+                            {/* ใช้ View เปล่าทางขวาเพื่อให้ไอคอน Back และ Text อยู่ตรงกลาง */}
+                            <View style={{ width: 32 }} />
+                        </View>
+
+                    </View>
+                </LinearGradient>
                 <View style={styles.container}>
                     <View style={{ marginTop: 0, }}>
 
@@ -85,6 +90,45 @@ const About = () => {
 export default About
 
 const styles = StyleSheet.create({
+    headerGradient: {
+        height: 85,
+        width: '100%',
+    },
+    btnBack: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 25,
+        padding: 4,
+        alignItems: 'center',
+    },
+    textListHead: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        fontFamily: 'Prompt_400Regular',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    listItemCon: {
+        marginTop: Platform.select({
+            ios: 35,
+            android: 35,
+        }),
+        paddingHorizontal: 0,
+        // iOS shadow properties
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 1,
+        // Android shadow (elevation)
+        elevation: 10,
+    },
     backIcon: {
         backgroundColor: 'rgba(50, 209, 145, 0.2)',
         padding: 3,
@@ -92,12 +136,6 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 20,
-        backgroundColor: '#fff',
-        marginTop: Platform.select({
-            ios: 80,
-            android: 75,
-        }),
-        flex: 1,
     },
     mt_20:{
         marginTop: 15
@@ -154,13 +192,6 @@ const styles = StyleSheet.create({
         borderRadius: 99,
         width: 200,
     },
-    textListHead: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        fontFamily: 'Prompt_400Regular',
-    },
     iconAdd: {
         color: '#f47524',
     },
@@ -178,21 +209,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: -5
     },
-    listItemCon: {
-        paddingTop: 40,
-        paddingHorizontal: 0,
-        backgroundColor: '#fff',
-        // iOS shadow properties
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 1,
-        // Android shadow (elevation)
-        elevation: 10,
-    },
+   
     card: {
         marginTop: -5,
         position: 'static',

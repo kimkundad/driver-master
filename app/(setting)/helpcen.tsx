@@ -1,7 +1,7 @@
 import { Image, View, Text, StyleSheet, Platform, TextInput, Linking, Alert, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Link, useNavigation, router, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
@@ -10,91 +10,124 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import api from '../../hooks/api'; // Axios instance
 
 const { width } = Dimensions.get('window');
 
-const handlePress = async () => {
-
-      const url = `tel:0992762487`;
-      try {
-        await Linking.openURL(url);
-      } catch (error) {
-        Alert.alert('Error', 'Unable to make a phone call');
-        console.error('Error:', error);
-      }
-   
-  };
-
-  const handleLinePress = async () => {
-    const lineUrl = 'https://line.me/R/ti/p/@563mmsdp'; // Link to Line Add Friend page
-
-    try {
-        const supported = await Linking.canOpenURL(lineUrl);
-        if (supported) {
-            await Linking.openURL(lineUrl);
-        } else {
-            Alert.alert(
-                'Cannot Open Line',
-                'It seems Line app is not installed or supported on your device.'
-            );
-        }
-    } catch (error) {
-        console.error('An error occurred', error);
-        Alert.alert('Error', 'An unexpected error occurred while trying to open Line.');
-    }
-};
-
-  const handleEmailPress = async () => {
-    const email = 'Loadmasterlogisticsth@gmail.com';
-    const url = `mailto:${email}`;
-
-    try {
-        const supported = await Linking.canOpenURL(url);
-        if (supported) {
-            await Linking.openURL(url);
-        } else {
-            Alert.alert(
-                'Email Not Supported',
-                'No email app is available to open this link. Please configure an email client and try again.'
-            );
-        }
-    } catch (error) {
-        console.error('An error occurred', error);
-        Alert.alert('Error', 'An unexpected error occurred while trying to open the email app.');
-    }
-};
 
 
 const Helpcen = () => {
+
+    const [dataSetting, setDataSetting] = useState(null);
+
+    const fetchData = async () => {
+
+        try {
+          const response = await api.get(`/getSetting`);
+          const settingData = response.data.set;
+          setDataSetting(settingData);
+        } catch (error) {
+          console.error('Error fetching order:', error);
+        }
+    
+      };
+    
+      useEffect(() => {
+        fetchData();
+      }, []);
+
+
+      const handlePress = async () => {
+
+        const url = `tel:${dataSetting?.phone}`;
+        try {
+          await Linking.openURL(url);
+        } catch (error) {
+          Alert.alert('Error', 'Unable to make a phone call');
+          console.error('Error:', error);
+        }
+     
+    };
+    
+    const handleLinePress = async () => {
+        const lineUrl = dataSetting?.line_oa_url; // Link to Line Add Friend page
+    
+        try {
+            const supported = await Linking.canOpenURL(lineUrl);
+            if (supported) {
+                await Linking.openURL(lineUrl);
+            } else {
+                Alert.alert(
+                    'Cannot Open Line',
+                    'It seems Line app is not installed or supported on your device.'
+                );
+            }
+        } catch (error) {
+            console.error('An error occurred', error);
+            Alert.alert('Error', 'An unexpected error occurred while trying to open Line.');
+        }
+    };
+    
+    const handleEmailPress = async () => {
+      const email = dataSetting?.email;
+      const url = `mailto:${email}`;
+    
+      try {
+          const supported = await Linking.canOpenURL(url);
+          if (supported) {
+              await Linking.openURL(url);
+          } else {
+              Alert.alert(
+                  'Email Not Supported',
+                  'No email app is available to open this link. Please configure an email client and try again.'
+              );
+          }
+      } catch (error) {
+          console.error('An error occurred', error);
+          Alert.alert('Error', 'An unexpected error occurred while trying to open the email app.');
+      }
+    };
+  
 
     const navigation = useNavigation(); // For Back button functionality
 
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
-            <Stack.Screen
-                    options={{
-                        headerTransparent: true,
-                        headerTitle: 'Help Cente',
-                        headerTitleAlign: 'center', // Center the header title
-                        headerTitleStyle: {
-                            color: 'black',
-                            fontFamily: 'Prompt_500Medium',
-                            fontSize: 17,
-                        },
-                        headerStyle: {
-                            backgroundColor: '#fff', // Set the background color here
-                        },
-                        headerLeft: () => (
-                            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
-                                <View style={{ backgroundColor: Colors.white, padding: 6, borderRadius: 50 }}>
+            
+            <StatusBar style="dark" />
+            <LinearGradient
+                    colors={['#1e3c72', '#1e3c72', '#2a5298']}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    style={styles.headerGradient}
+                >
+                    <View style={styles.listItemCon}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                            <TouchableOpacity style={styles.btnBack} onPress={() => router.push('(tabs)/profile')}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                        padding: 5,
+                                        borderRadius: 25
+                                    }}
+                                >
                                     <Ionicons name="chevron-back" size={20} color="black" />
                                 </View>
                             </TouchableOpacity>
-                        ),
-                    }}
-                />
-            <StatusBar style="dark" />
+
+                            <View style={styles.textListHead}>
+                                <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
+                                    ศูนย์ช่วยเหลือ
+                                </Text>
+                            </View>
+
+                            {/* ใช้ View เปล่าทางขวาเพื่อให้ไอคอน Back และ Text อยู่ตรงกลาง */}
+                            <View style={{ width: 32 }} />
+                        </View>
+
+                    </View>
+                </LinearGradient>
             <ScrollView>
                
                
@@ -135,7 +168,7 @@ const Helpcen = () => {
                                         <Feather name="phone" size={24} color="black" />
                                     </View>
                                     <View>
-                                        <Text style={ styles.textSeting}> 099-276-2487</Text>
+                                        <Text style={ styles.textSeting}> {dataSetting?.phone}</Text>
                                     </View>
                                 </View>
                                 </TouchableOpacity>
@@ -148,7 +181,7 @@ const Helpcen = () => {
                                             <Entypo name="email" size={24} color="black" />
                                         </View>
                                         <View>
-                                            <Text style={ styles.textSeting}> Loadmasterlogisticsth@gmail.com</Text>
+                                            <Text style={ styles.textSeting}> {dataSetting?.email}</Text>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
@@ -160,7 +193,7 @@ const Helpcen = () => {
                                         <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
                                     </View>
                                     <View>
-                                        <Text style={ styles.textSeting}> Line ID : @563mmsdp</Text>
+                                        <Text style={ styles.textSeting}> Line ID : {dataSetting?.line_oa}</Text>
                                     </View>
                                 </View>
                                 </TouchableOpacity>
@@ -192,18 +225,34 @@ export default Helpcen
 
 const styles = StyleSheet.create({
 
-    backIcon: {
-        backgroundColor: 'rgba(50, 209, 145, 0.2)',
-        padding: 3,
-        borderRadius: 50,
+    headerGradient: {
+        height: 85,
+        width: '100%',
+    },
+    btnBack: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 25,
+        padding: 4,
+        alignItems: 'center',
+    },
+    textListHead: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        fontFamily: 'Prompt_400Regular',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
     },
     container: {
         padding: 20,
-        backgroundColor: '#fff',
-        marginTop: Platform.select({
-            ios: 80,
-            android: 75,
-        }),
+        // marginTop: Platform.select({
+        //     ios: 80,
+        //     android: 75,
+        // }),
         flex: 1,
     },
     textListHead2: {
@@ -240,13 +289,7 @@ const styles = StyleSheet.create({
         borderRadius: 99,
         width: 200,
     },
-    textListHead: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        fontFamily: 'Prompt_400Regular',
-    },
+    
     iconAdd: {
         color: '#f47524',
     },
@@ -265,9 +308,11 @@ const styles = StyleSheet.create({
         marginTop: -5
     },
     listItemCon: {
-        paddingTop: 40,
+        marginTop: Platform.select({
+            ios: 35,
+            android: 35,
+        }),
         paddingHorizontal: 0,
-        backgroundColor: '#fff',
         // iOS shadow properties
         shadowColor: '#000',
         shadowOffset: {
