@@ -1,0 +1,15 @@
+{
+    "language": "语言",
+    "home": {
+      "search": "输入您的订单号。",
+      "confirmed": "确认",
+      "Waitingdocument": "等待文件确认",
+      "CurrentShip": "当前交货",
+      "origin": "起源",
+      "quantity": "数量",
+      "destination": "目的地",
+      "type": "类型",
+      "noItem": "未找到送货物品",
+      "articlesLinkText": "更多文章"
+    }
+  }

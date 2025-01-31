@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Driver Master",
+    "name": "LoadMaster Driver",
     "slug": "gps-app",
     "version": "1.0.0",
     "newArchEnabled": true,
@@ -20,7 +20,8 @@
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to your camera for scanning."
-      }
+      },
+      "bundleIdentifier": "com.kimkundad.drivermaster"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -58,7 +59,8 @@
           "isAndroidBackgroundLocationEnabled": true,
           "isAndroidForegroundServiceEnabled": true
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

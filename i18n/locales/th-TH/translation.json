@@ -1,0 +1,16 @@
+{
+    "language": "ภาษา",
+    "home": {
+      "search": "กรอกหมายเลขออเดอร์",
+      "confirmed": "ยืนยันสำเร็จ",
+      "Waitingdocument": "รอการยืนยันเอกสาร",
+      "CurrentShip": "การจัดส่งปัจจุบัน",
+      "origin": "ต้นทาง",
+      "quantity": "จำนวน",
+      "destination": "ปลายทาง",
+      "type": "ประเภท",
+      "noItem": "ไม่พบรายการจัดส่ง",
+      "articlesLinkText": "More articles"
+    }
+  }
+

@@ -4,7 +4,7 @@ import { useEffect, useState  } from 'react';
 import 'react-native-reanimated';
 import * as Font from 'expo-font';
 import { UserProvider } from '../hooks/UserContext';
-
+import '@/i18n';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

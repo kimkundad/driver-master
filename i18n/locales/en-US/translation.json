@@ -1,0 +1,15 @@
+{
+    "language": "Language",
+    "home": {
+      "search": "Enter your order number",
+      "confirmed": "Confirm",
+      "Waitingdocument": "Waiting for document confirmation",
+      "CurrentShip": "Current Shipment",
+      "origin": "origin",
+      "quantity": "quantitys",
+      "destination": "destination",
+      "type": "type",
+      "noItem": "Delivery item not found",
+      "articlesLinkText": "More articles"
+    }
+  }

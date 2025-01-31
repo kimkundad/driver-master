@@ -12,6 +12,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import DeviveryStatus from '../../components/DeviveryStatus';
 import { StatusBar } from 'expo-status-bar';
 import { io } from "socket.io-client";
+import { useTranslation } from "react-i18next";
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -72,6 +73,8 @@ export default function HomeScreen({ navigation }) {
   const [searchInput, setSearchInput] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { i18n, t } = useTranslation();
   
 
  // Request Permissions and Start Background Location Updates
@@ -216,7 +219,7 @@ const stopBackgroundLocationTracking = async () => {
       
       <View style={styles.inputContainer}>
                 <TextInput 
-                    placeholder="Enter the receipt number" 
+                    placeholder={t('home.search')}
                     style={styles.input} 
                     value={searchInput}
                     onChangeText={handleSearch}
@@ -265,12 +268,12 @@ const stopBackgroundLocationTracking = async () => {
               >
                 {dataDoc === true ? (
                   <View style={styles.badge2}>
-                    <Text style={styles.badgeText2}>ยืนยันสำเร็จ</Text>
+                    <Text style={styles.badgeText2}>{t('home.confirmed')}</Text>
                     <Ionicons name="chevron-forward" size={12} color="#fff" />
                 </View>
                 ) : (
                   <View style={styles.badge}>
-                    <Text style={styles.badgeText}>รอการยืนยันเอกสาร</Text>
+                    <Text style={styles.badgeText}>{t('home.Waitingdocument')}</Text>
                     <Ionicons name="chevron-forward" size={12} color="black" />
                 </View>
                 )}
@@ -285,7 +288,7 @@ const stopBackgroundLocationTracking = async () => {
 
 
             {/* Current Shipments Section */}
-            <Text style={styles.sectionTitle}>Current Shipments</Text>
+            <Text style={styles.sectionTitle}>{t('home.CurrentShip')}</Text>
 
 
             <FlatList
@@ -334,7 +337,7 @@ const stopBackgroundLocationTracking = async () => {
                     <View style={styles.flexItem}>
 
                       <View>
-                        <Text style={styles.HeadshipmentInfo}>ต้นทาง {item?.dri_time}</Text>
+                        <Text style={styles.HeadshipmentInfo}>{t('home.origin')} {item?.dri_time}</Text>
                         <View style={styles.shipmentRow}>
                             <Ionicons name="cube-outline" size={20} color="#3858b1" />
                             <Text style={styles.shipmentInfo}>{item.province}</Text>
@@ -343,7 +346,7 @@ const stopBackgroundLocationTracking = async () => {
 
                       {/* Receiver */}
                       <View>
-                        <Text style={styles.HeadshipmentInfo}>จำนวน</Text>
+                        <Text style={styles.HeadshipmentInfo}>{t('home.quantity')} </Text>
                         <View style={styles.shipmentRow}>
                             <FontAwesome5 name="cubes" size={20} color="#3858b1" />
                             <Text style={styles.shipmentInfo}>{item.amount} กล่อง</Text>
@@ -352,7 +355,7 @@ const stopBackgroundLocationTracking = async () => {
                     </View>
                     <View style={styles.flexItem}>
                       <View>
-                        <Text style={styles.HeadshipmentInfo}>ปลายทาง</Text>
+                        <Text style={styles.HeadshipmentInfo}>{t('home.destination')}</Text>
                         <View style={styles.shipmentRow}>
                             <MaterialCommunityIcons name="cube-scan" size={22} color="#3858b1" />
                             <Text style={styles.shipmentInfo}>{item.province2}</Text>
@@ -360,7 +363,7 @@ const stopBackgroundLocationTracking = async () => {
                       </View>
                       {/* Receiver */}
                       <View>
-                        <Text style={styles.HeadshipmentInfo}>ประเภท</Text>
+                        <Text style={styles.HeadshipmentInfo}>{t('home.type')} </Text>
                         <View style={styles.shipmentRow}>
                             <MaterialCommunityIcons name="alert-octagram-outline" size={20} color="#3858b1" />
                             <Text style={styles.shipmentInfo}>{item.type}</Text>
@@ -375,7 +378,7 @@ const stopBackgroundLocationTracking = async () => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             ListEmptyComponent={
             <View style={{ height: 400,  }}>
-            <Text style={styles.emptyText}>No orders found</Text>
+            <Text style={styles.emptyText}>{t('home.noItem')}</Text>
             </View>
           }
           />
@@ -529,6 +532,7 @@ input: {
   flex: 1,
   fontSize: 14,
   color: '#6b6b6b',
+  fontFamily: 'Prompt_400Regular',
 },
   showflex: {
     display: 'flex',

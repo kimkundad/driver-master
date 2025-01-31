@@ -12,7 +12,7 @@ import { UserContext } from '../../hooks/UserContext';
 import api from '../../hooks/api'; // Axios instance
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
 
@@ -21,6 +21,21 @@ export default function Profile() {
   const [files, setFiles] = useState(null); // Holds URI of selected image
   const [isEnabled, setIsEnabled] = useState(false);
   const [loading, setLoading] = useState(false); // Loading state for API call
+
+  const { i18n, t } = useTranslation(); // ใช้ i18n สำหรับการจัดการภาษา
+  // ฟังก์ชันแสดงข้อความภาษา
+  const getLanguageDisplay = () => {
+    switch (i18n.language) {
+      case "th-TH":
+        return "ภาษาไทย (TH)";
+      case "en-US":
+        return "English (US)";
+      case "zh-CN":
+        return "中文 (自动翻译)";
+      default:
+        return "Language"; // ค่าดีฟอลต์
+    }
+  };
 
   useEffect(() => {
 
@@ -287,7 +302,7 @@ export default function Profile() {
                   <View>
                     <View style={styles.showflex}>
                       <View style={{ marginRight: 10 }}>
-                        <Text style={styles.textSeting2}>ภาษาไทย (TH)</Text>
+                        <Text style={styles.textSeting2}>{getLanguageDisplay()}</Text>
                       </View>
                       <Feather name="chevron-right" size={24} color="black" />
                     </View>
