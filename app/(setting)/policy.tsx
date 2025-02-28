@@ -6,50 +6,14 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get('window');
-
-
 
 const Policy = () => {
 
     const navigation = useNavigation(); // For Back button functionality
-
-    const data = [
-        "ข้อมูลส่วนบุคคลประเภทใดบ้างที่บริษัทฯ เก็บรวบรวม รวมถึงข้อมูลที่ท่านมอบให้แก่บริษัทฯ เกี่ยวกับตัวท่านเองหรือบุคคลที่เกี่ยวข้องกับธุรกิจของท่าน (“ท่าน”) และข้อมูลที่บริษัทฯ ได้รับจากการที่ท่านเป็นลูกค้าของบริษัทฯ",
-        "วิธีการที่บริษัทฯ ใช้ข้อมูลส่วนบุคคลของท่าน",
-        "ผู้ที่บริษัทฯ อาจเปิดเผยข้อมูลส่วนบุคคลของท่านให้ทราบ",
-        "ทางเลือกที่บริษัทฯ นำเสนอให้ท่าน รวมถึงวิธีการเข้าถึงและปรับปรุงข้อมูลส่วนบุคคลของท่านให้เป็นปัจจุบัน",
-        "สิทธิที่ท่านมีต่อข้อมูลส่วนบุคคลของท่าน และการคุ้มครองตามกฎหมายที่เกี่ยวข้อง"
-    ];
-    
-    const data2 = [
-        "เมื่อท่านใช้บริการจัดส่งพัสดุหรือผลิตภัณฑ์ของบริษัทฯ",
-        "การสื่อสารระหว่างท่านและบริษัทฯ ผ่านโทรศัพท์ จดหมาย อีเมล หรือวิธีการอื่น ๆ",
-        "เมื่อท่านใช้งานเว็บไซต์หรือแอปพลิเคชันของบริษัทฯ รวมถึงการเก็บข้อมูลผ่านคุกกี้และโปรแกรมติดตามอื่น ๆ",
-        "ข้อมูลจากเอกสารหรือแบบสำรวจความเห็นของลูกค้า",
-        "กิจกรรมส่งเสริมการขายหรือการแข่งขันที่ท่านเข้าร่วมกับบริษัทฯ"
-    ];
-    
-    const data3 = [
-        "ข้อมูลส่วนตัว เช่น ชื่อ-นามสกุล วันเกิด หมายเลขบัตรประชาชน และข้อมูลการติดต่อ",
-        "ข้อมูลทางการเงิน เช่น บัญชีธนาคาร เลขบัตรเครดิต",
-        "ข้อมูลครอบครัวและข้อมูลการทำธุรกรรม",
-        "ข้อมูลอิเล็กทรอนิกส์ เช่น ที่อยู่ IP และบันทึกกิจกรรม",
-    ];
-
-    const data4 = [
-        "เพื่อพัฒนาการให้บริการด้านการจัดส่งพัสดุ และการตอบสนองความต้องการของท่าน",
-        "เพื่อปรับปรุงคุณภาพการให้บริการออนไลน์ให้มีประสิทธิภาพและสะดวกสบาย",
-        "เพื่อป้องกันการเข้าถึงบัญชีโดยไม่ได้รับอนุญาต และตรวจสอบการใช้งานบัญชีของท่าน",
-        "เพื่อส่งเสริมการขาย นำเสนอข่าวสารและสิทธิประโยชน์ที่ตรงกับความสนใจของท่าน",
-
-        "เพื่อสนับสนุนกิจกรรมการตลาดและการวิเคราะห์ข้อมูล",
-        "เพื่อระงับข้อพิพาทหรือข้อขัดแย้งที่อาจเกิดขึ้น",
-        "เพื่อปฏิบัติตามกฎหมายและกฎระเบียบที่เกี่ยวข้อง",
-    ];
-
+    const { i18n, t } = useTranslation();
 
     const renderContent = () => (
         <View style={{ marginTop: 0, }}>
@@ -57,23 +21,20 @@ const Policy = () => {
                         <View style={styles.container}>
 
                             <View style={styles.mt10}>
-                            <Text style={styles.textDetail}>
-                            เรียน ลูกค้าของบริษัทฯ
-                            </Text>
+                            
                             <View style={styles.mt10}></View>
                                 <Text style={[styles.textDetail]}>
-                                บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด ("บริษัทฯ") ให้ความสำคัญกับความเป็นส่วนตัว และมุ่งมั่นที่จะคุ้มครองข้อมูลส่วนบุคคลของท่าน 
-                                ("ข้อมูลส่วนบุคคล") ตามกฎหมายไทย
+                                {t("policy.introduction")}
                                 </Text>
                                 <View style={styles.mt10}></View>
                                 <Text style={styles.textDetail}>
-                                    ประกาศความเป็นส่วนตัวฉบับนี้อธิบายถึงรายละเอียดดังต่อไปนี้:
+                                {t("policy.introduction2")}
                                 </Text>
 
                                 <View style={styles.mt10}></View>
 
                                 <FlatList
-                                    data={data}
+                                    data={t("policy.data_collection0", { returnObjects: true })}
                                     renderItem={({ item, index }) => (
                                         <View style={styles.listItem}>
                                             <Text style={styles.number}>{index + 1}.</Text>
@@ -87,15 +48,15 @@ const Policy = () => {
                             </View>
 
                             <View>
-                                <Text style={styles.header}>1. การเก็บรวบรวมข้อมูลส่วนบุคคล</Text>
+                                <Text style={styles.header}>{t("policy.section3_title")}</Text>
                             </View>
                             <View style={styles.mt10}>
                                 <Text style={styles.textDetail}>
-                                บริษัทฯ เก็บรวบรวมข้อมูลส่วนบุคคลหลายประเภท ขึ้นอยู่กับสถานการณ์และลักษณะของสินค้า บริการ และ/หรือ ธุรกรรมของท่าน ข้อมูลอาจได้รับจากหลายแหล่ง เช่น:
+                                {t("policy.section4_title")}
                                 </Text>
                                 <View style={styles.mt10}></View>
                                 <FlatList
-                                    data={data2}
+                                    data={t("policy.data_collection", { returnObjects: true })}
                                     renderItem={({ item, index }) => (
                                         <View style={styles.listItem}>
                                             <Text style={styles.number}>{index + 1}.</Text>
@@ -105,11 +66,11 @@ const Policy = () => {
                                     keyExtractor={(item, index) => index.toString()}
                                 />
                                 <Text style={styles.textDetail}>
-                                    ข้อมูลส่วนบุคคลที่บริษัทฯ ประมวลผลประกอบด้วย (แต่ไม่จำกัดเพียง):
+                                {t("policy.section5_title")}
                                 </Text>
                                 <View style={styles.mt10}></View>
                                 <FlatList
-                                    data={data3}
+                                    data={t("policy.data_collection2", { returnObjects: true })}
                                     renderItem={({ item, index }) => (
                                         <View style={styles.listItem}>
                                             <Text style={styles.number}>{index + 1}.</Text>
@@ -121,15 +82,15 @@ const Policy = () => {
                             </View>
 
                             <View>
-                                <Text style={styles.header}>2. การใช้ข้อมูลส่วนบุคคล</Text>
+                                <Text style={styles.header}>{t("policy.section2_title")}</Text>
                             </View>
                             <View style={styles.mt10}>
                                 <Text style={styles.textDetail}>
-                                บริษัทฯ ใช้ข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ที่ชัดเจนและสอดคล้องตามกฎหมาย เช่น:
+                                {t("policy.text1")}
                                 </Text>
                                 <View style={styles.mt10}></View>
                                 <FlatList
-                                    data={data4}
+                                    data={t("policy.data_collection3", { returnObjects: true })}
                                     renderItem={({ item, index }) => (
                                         <View style={styles.listItem}>
                                             <Text style={styles.number}>{index + 1}.</Text>
@@ -141,8 +102,7 @@ const Policy = () => {
 
                                 <View style={styles.mt10}></View>
                                 <Text style={styles.textDetail}>
-                                ในกรณีที่บริษัทฯ อาศัยฐานผลประโยชน์อันชอบธรรมในการประมวลผลข้อมูล บริษัทฯ 
-                                จะพิจารณาว่าผลประโยชน์ดังกล่าวมีความสำคัญกว่าสิทธิของท่าน และจะประมวลผลเฉพาะที่จำเป็นและเหมาะสมเท่านั้น
+                                {t("policy.text2")}
                                 </Text>
                             </View>
 
@@ -176,7 +136,7 @@ const Policy = () => {
 
                             <View style={styles.textListHead}>
                                 <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
-                                นโยบายความเป็นส่วนตัว
+                                {t("setting.policy")}
                                 </Text>
                             </View>
                             

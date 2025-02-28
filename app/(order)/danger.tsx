@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import api from '../../hooks/api'; // Axios instance
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get('window');
 const buttonSize = width / 3 - 28; // Adjust size to fit 3 buttons in a row
@@ -32,7 +32,7 @@ export default function Tracking() {
   const [formData, setFormData] = useState(null);
   const [getProvince, setGetProvince] = useState(null);
   const [getNo, setGetNo] = useState(3);
-
+  const { i18n, t } = useTranslation();
 
   const [form, setForm] = useState({
     remark: '',
@@ -226,7 +226,7 @@ onPress={() =>
         <Ionicons name="add" size={40} color="gray" />
       </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>หมายเหตุ</Text>
+      <Text style={styles.sectionTitle}>{t('detail.remark')}</Text>
       <TextInput
         style={styles.textArea}
         placeholder="รายละเอียดเพิ่มเติม..."
@@ -237,7 +237,7 @@ onPress={() =>
       />
 
       <TouchableOpacity onPress={handleCreate} disabled={loading} style={styles.btn}>
-          <Text style={styles.btnText}>{loading ? 'กำลังบันทึกข้อมูล...' : 'บันทึกข้อมูล'}</Text>
+          <Text style={styles.btnText}>{loading ? `${t('profile.Updating')}...` : `${t('profile.Update')}`}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -336,7 +336,7 @@ onPress={() =>
 
                             <View style={styles.textListHead}>
                                 <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
-                                    แจ้งอุบัติเหตุ
+                                {t('detail.Report')}
                                 </Text>
                             </View>
 

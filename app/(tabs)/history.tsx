@@ -6,84 +6,7 @@ import { Link, useNavigation, router, Stack } from 'expo-router';
 import api from '../../hooks/api'; // Axios instance
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import DeviveryStatus from '../../components/DeviveryStatus';
-
-const renderItem = ({ item: orders }) => (
-  <TouchableOpacity
-    onPress={() => {
-      router.push({
-        pathname: '(order)/detail',
-        params: { 
-          id: orders.id,
-          xlatitude: orders.latitude,
-          xlongitude: orders.longitude,
-          xlatitude2: orders.latitude2,
-          xlongitude2: orders.longitude2,
-          xd_lat: orders.d_lat,
-          xd_long: orders.d_long,
-        }, // Pass the order id as a parameter
-      });
-    }}
-  >
-    <View style={styles.shipmentCard}>
-      {/* Shipment Number */}
-      <View style={styles.shipmentHeader}>
-        <View style={styles.headOrderCode}>
-          <View style={{ display: 'flex', flexDirection: 'row', gap: 5 }}>
-
-            <View>
-              <DeviveryStatus order={orders} />
-            </View>
-            <Text style={styles.shipmentNumber}>{orders?.dri_date}</Text>
-
-          </View>
-          <Text style={styles.shipmentId}>{orders?.code_order}</Text>
-        </View>
-        <Image
-          source={require('../../assets/images/shipping.png')}
-          style={styles.shipmentIcon}
-        />
-      </View>
-      {/* Shipment Details */}
-      <View style={styles.shipmentDetails}>
-        <View style={styles.flexItem}>
-          <View>
-            <Text style={styles.HeadshipmentInfo}>ต้นทาง</Text>
-            <View style={styles.shipmentRow}>
-              <Ionicons name="cube-outline" size={20} color="#3858b1" />
-              <Text style={styles.shipmentInfo}>{orders?.province}</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.HeadshipmentInfo}>จำนวน</Text>
-            <View style={styles.shipmentRow}>
-              <FontAwesome5 name="cubes" size={20} color="#3858b1" />
-              <Text style={styles.shipmentInfo}>{orders?.amount} กล่อง</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.flexItem}>
-          <View>
-            <Text style={styles.HeadshipmentInfo}>ปลายทาง</Text>
-            <View style={styles.shipmentRow}>
-              <MaterialCommunityIcons name="cube-scan" size={22} color="#3858b1" />
-              <Text style={styles.shipmentInfo}>{orders?.province2}</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.HeadshipmentInfo}>ประเภท</Text>
-            <View style={styles.shipmentRow}>
-              <MaterialCommunityIcons name="alert-octagram-outline" size={20} color="#3858b1" />
-              <Text style={styles.shipmentInfo}>{orders?.type}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
-
-
-
+import { useTranslation } from "react-i18next";
 
 export default function History() {
 
@@ -92,6 +15,83 @@ export default function History() {
   const [loading, setLoading] = useState(false); // Track loading state
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false); // Track refresh state
+  const { i18n, t } = useTranslation(); // ใช้ i18n สำหรับการจัดการภาษา
+
+
+  const renderItem = ({ item: orders }) => (
+    <TouchableOpacity
+      onPress={() => {
+        router.push({
+          pathname: '(order)/detail',
+          params: { 
+            id: orders.id,
+            xlatitude: orders.latitude,
+            xlongitude: orders.longitude,
+            xlatitude2: orders.latitude2,
+            xlongitude2: orders.longitude2,
+            xd_lat: orders.d_lat,
+            xd_long: orders.d_long,
+          }, // Pass the order id as a parameter
+        });
+      }}
+    >
+      <View style={styles.shipmentCard}>
+        {/* Shipment Number */}
+        <View style={styles.shipmentHeader}>
+          <View style={styles.headOrderCode}>
+            <View style={{ display: 'flex', flexDirection: 'row', gap: 5 }}>
+  
+              <View>
+                <DeviveryStatus order={orders} />
+              </View>
+              <Text style={styles.shipmentNumber}>{orders?.dri_date}</Text>
+  
+            </View>
+            <Text style={styles.shipmentId}>{orders?.code_order}</Text>
+          </View>
+          <Image
+            source={require('../../assets/images/shipping.png')}
+            style={styles.shipmentIcon}
+          />
+        </View>
+        {/* Shipment Details */}
+        <View style={styles.shipmentDetails}>
+          <View style={styles.flexItem}>
+            <View>
+              <Text style={styles.HeadshipmentInfo}>{t('home.origin')}</Text>
+              <View style={styles.shipmentRow}>
+                <Ionicons name="cube-outline" size={20} color="#3858b1" />
+                <Text style={styles.shipmentInfo}>{orders?.province}</Text>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.HeadshipmentInfo}>{t('home.quantity')}</Text>
+              <View style={styles.shipmentRow}>
+                <FontAwesome5 name="cubes" size={20} color="#3858b1" />
+                <Text style={styles.shipmentInfo}>{orders?.amount} {t('history.box')}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.flexItem}>
+            <View>
+              <Text style={styles.HeadshipmentInfo}>{t('home.destination')}</Text>
+              <View style={styles.shipmentRow}>
+                <MaterialCommunityIcons name="cube-scan" size={22} color="#3858b1" />
+                <Text style={styles.shipmentInfo}>{orders?.province2}</Text>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.HeadshipmentInfo}>{t('home.type')}</Text>
+              <View style={styles.shipmentRow}>
+                <MaterialCommunityIcons name="alert-octagram-outline" size={20} color="#3858b1" />
+                <Text style={styles.shipmentInfo}>{orders?.type}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -137,7 +137,18 @@ export default function History() {
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
       <Stack.Screen options={{
         headerTransparent: true,
-        headerTitle: 'History',
+        headerTitle: () => (
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: 'Prompt_500Medium',
+              fontSize: 18,
+              textAlign: 'center',
+            }}
+          >
+            {t('history.history')}
+          </Text>
+        ),
         headerTitleAlign: 'center',
         headerTitleStyle: {
           color: '#fff', // กำหนดสีของ headerTitle

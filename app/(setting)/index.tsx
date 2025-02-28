@@ -8,12 +8,12 @@ import api from '../../hooks/api'; // Axios instance
 import { UserContext } from '../../hooks/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useTranslation } from "react-i18next";
 
 const EditProfile = () => {
 
   const navigation = useNavigation(); // สำหรับปุ่ม Back
-
+  const { i18n, t } = useTranslation(); // ใช้ i18n สำหรับการจัดการภาษา
   const { userProfile, setUserProfile } = useContext(UserContext);
   const [form, setForm] = useState({
     name: '',
@@ -85,7 +85,7 @@ const EditProfile = () => {
 
                             <View style={styles.textListHead}>
                                 <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
-                                    แก้ไขข้อมูลส่วนตัว
+                                     {t('profile.editProfile')}
                                 </Text>
                             </View>
 
@@ -102,7 +102,7 @@ const EditProfile = () => {
         <View style={styles.card}>
           <View style={styles.form}>
             <View style={styles.input}>
-              <Text style={styles.inputLabel}>ชื่อ-นามสกุล</Text>
+              <Text style={styles.inputLabel}>{t('profile.changename')}</Text>
               <TextInput
                 clearButtonMode="while-editing"
                 placeholder="kim kundad"
@@ -114,7 +114,7 @@ const EditProfile = () => {
             </View>
 
             <View style={styles.input}>
-              <Text style={styles.inputLabel}>เบอร์ติดต่อ</Text>
+              <Text style={styles.inputLabel}>{t('profile.phone')}</Text>
               <TextInput
                 keyboardType="number-pad"
                 placeholder="09578512xxx"
@@ -127,7 +127,7 @@ const EditProfile = () => {
             </View>
 
             <View style={styles.input}>
-              <Text style={styles.inputLabel}>อีเมล</Text>
+              <Text style={styles.inputLabel}>{t('profile.email')}</Text>
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -143,7 +143,7 @@ const EditProfile = () => {
             <View style={styles.formAction}>
               <TouchableOpacity onPress={handleUpdateProfile} disabled={loading}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>{loading ? 'Updating...' : 'Update'}</Text>
+                  <Text style={styles.btnText}>{loading ? `${t('profile.Updating')}...` : `${t('profile.Update')}`}</Text>
                 </View>
               </TouchableOpacity>
             </View>

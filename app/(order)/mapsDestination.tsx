@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 import provinceData from '../../assets/raw/raw_database.json';
+import { useTranslation } from "react-i18next";
 
 export default function MapsDestination() {
   const [location, setLocation] = useState(null);
@@ -16,6 +17,7 @@ export default function MapsDestination() {
   const route = useRoute(); 
   const pinImage = require('../../assets/images/pin_app.png');
   const { id } = useLocalSearchParams(); // รับพารามิเตอร์ id
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     (async () => {

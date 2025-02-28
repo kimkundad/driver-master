@@ -11,5 +11,111 @@
       "type": "type",
       "noItem": "Delivery item not found",
       "articlesLinkText": "More articles"
-    }
+    },
+    "history": {
+      "history": "History",
+      "box": "box"
+    },
+    "detail": {
+      "receive": "Receive",
+       "loadProduct": "Product images on the truck",
+       "remark": "note",
+       "delivery ": "Confirm delivery of items to customers",
+       "Inform": "Notify customers",
+       "successfulDelivery": "Picture of successful delivery",
+       "successfully ": "successful",
+       "being": "succeeding",
+       "Report": "Report an accident",
+       "CancelNotification": "Cancel",
+       "Canceling": "Canceling",
+       "choose": "Choose this destination"
+    },
+    "profile": {
+      "header": "Setting",
+      "code": "Code",
+      "editProfile": "Edit Profile",
+      "document": "Document",
+      "Language": "Language",
+      "Help": "Help Center",
+      "Notification": "การแจ้งเตือน",
+      "policy": "privacy policy",
+      "About": "About Us",
+      "Logout": "Logout",
+      "changename": "First and last name",
+      "phone": "Contact number",
+      "email": "Email",
+      "Update": "Update",
+      "Updating": "Updating",
+      "VerificationDocuments": "Verification documents"
+    },
+    "doc": {
+      "bankBookHead": "Bank Book Image",
+      "bankBookDetail": "Upload a bank book image. The account name must match the registered name.",
+      "bankBookLabel": "Bank Book",
+  
+      "driverLicenseHead": "Driver's License Image",
+      "driverLicenseDetail": "Upload a driver's license image. The account name must match the registered name.",
+      "driverLicenseLabel": "Driver's License",
+  
+      "publicLicenseHead": "Public Driving License",
+      "publicLicenseDetail": "Upload a public driving license. The account name must match the registered name.",
+      "publicLicenseLabel": "Public License",
+  
+      "idCardHead": "ID Card Image",
+      "idCardDetail": "Upload an ID card image. The account name must match the registered name.",
+      "idCardLabel": "ID Card",
+  
+      "insuranceHead": "Insurance Document",
+      "insuranceDetail": "Upload an insurance document. The account name must match the registered name.",
+      "insuranceLabel": "Insurance"
+    },
+    "policy": {
+    "title": "Privacy Policy",
+    "section1_title": "1. Collection of Personal Information",
+    "section2_title": "2. Use of Personal Information",
+    "section3_title": "1. Collection of personal information",
+    "section4_title": "The Company collects many types of personal information. It depends on the situation and nature of your products, services and/or transactions. Information may be obtained from many sources, such as:",
+    "section5_title": "Personal information that the company Processing consists of (but not limited to):",
+    "introduction": "Dear customers, Loadmaster Logistics Co., Ltd. ('the Company') prioritizes privacy and is committed to protecting your personal data ('personal information') in accordance with Thai law.",
+    "introduction2": "This Privacy Notice explains the following details::",
+    "text1": "The Company uses personal information for clear and legally consistent purposes, such as:",
+    "text2": "In the case that the company Based on legitimate interests in processing data, the Company will consider that such interests are more important than your rights. and will process only what is necessary and appropriate",
+    "data_collection0": [
+  "What types of personal information does the company collect, including information you provide to the company about yourself or individuals related to your business ('you'), and information the company obtains as you are its customer.",
+  "How the company uses your personal information.",
+  "Parties to whom the company may disclose your personal information.",
+  "Choices the company offers you, including how to access and update your personal information to keep it accurate.",
+  "Your rights regarding your personal information and the protections provided under applicable laws."
+],
+    "data_collection": [
+      "When you use the company's parcel or product delivery services.",
+      "Communication between you and the company through telephone, mail, email, or other means.",
+      "When you use the company's website or application, including data collected through cookies and other tracking programs.",
+      "Information from documents or customer feedback surveys.",
+      "Promotional activities or competitions you participate in with the company."
+    ],
+    "data_collection2": [
+  "Personal information such as name, date of birth, ID card number, and contact details.",
+  "Financial information such as bank accounts and credit card numbers.",
+  "Family information and transaction details.",
+  "Electronic information such as IP address and activity logs."
+],
+    "data_collection3": [
+  "To enhance parcel delivery services and meet your needs.",
+  "To improve the quality of online services, making them more efficient and user-friendly.",
+  "To prevent unauthorized account access and monitor your account usage.",
+  "To promote sales, deliver news, and provide benefits tailored to your interests.",
+  "To support marketing activities and data analysis.",
+  "To resolve disputes or conflicts that may arise.",
+  "To comply with applicable laws and regulations."
+]
+  },
+  "about": {
+  "header": "Loadmaster Logistics Co., Ltd.",
+  "description1": "Loadmaster Logistics Co., Ltd. is a leading express parcel delivery company in Thailand. Established in 2006, we focus on continuous development of personnel and technology to deliver the best parcel delivery experience to our customers.",
+  "description2": "Currently, the company has service points throughout Thailand, covering all areas of the country. We can handle the parcel delivery volume required by our customers to support the growth of e-commerce businesses as well as other businesses such as retail and wholesale, which contribute to sustainable economic growth in Thailand.",
+  "description3": "Our company is committed to providing high-quality services to enhance the quality of life for the community, while also caring for employees and being responsible to stakeholders and investors.",
+  "description4": "We are determined to be a leading express parcel delivery service provider in Thailand by focusing on excellent and beyond customer expectations."
+}
   }
+

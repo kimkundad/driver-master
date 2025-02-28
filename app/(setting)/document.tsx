@@ -12,12 +12,13 @@ import { UserContext } from '../../hooks/UserContext';
 import api from '../../hooks/api'; // Axios instance
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from "react-i18next";
 
 export default function Document() {
 
     const navigation = useNavigation(); // สำหรับปุ่ม Back
     const [documentStatuses, setDocumentStatuses] = useState({});
-
+    const { i18n, t } = useTranslation(); // ใช้ i18n สำหรับการจัดการภาษา
 
     useEffect(() => {
         const fetchDocumentStatuses = async () => {
@@ -45,14 +46,14 @@ export default function Document() {
         return documentStatuses[stepNo] === 1 ? "#2aa866" : "#999";
     };
 
-    const renderDocumentItem = (textHead, textDetail, stepNo, label) => (
+    const renderDocumentItem = (keyHead, keyDetail, stepNo, keyLabel) => (
         <TouchableOpacity
             onPress={() => {
                 router.push({
                     pathname: '(setting)/upDoc',
                     params: {
-                        textHead,
-                        textDetail,
+                        textHead: t(keyHead),
+                        textDetail: t(keyDetail),
                         myStep: stepNo
                     },
                 });
@@ -60,7 +61,7 @@ export default function Document() {
         >
             <View style={styles.shipmentCard}>
                 <View style={styles.shipmentDetails}>
-                    <Text style={styles.textMenu}>{label}</Text>
+                    <Text style={styles.textMenu}>{t(keyLabel)}</Text>
                     <Feather name="check-circle" size={20} color={getIconColor(stepNo)} />
                 </View>
             </View>
@@ -90,8 +91,8 @@ export default function Document() {
                             </TouchableOpacity>
 
                             <View style={styles.textListHead}>
-                                <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
-                                    เอกสารใช้ยืนยัน
+                                <Text style={{ fontSize: 17, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
+                                {t('profile.VerificationDocuments')}
                                 </Text>
                             </View>
 
@@ -106,36 +107,42 @@ export default function Document() {
 
                 <View style={{ marginTop: 20 }}>
 
-                {renderDocumentItem(
+                {/* {renderDocumentItem(
                 'รูปสมุดบัญชี',
                 'อัพโหลดรูปสมุดบัญชี โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
                 1,
                 'สมุดบัญชี'
-            )}
-            {renderDocumentItem(
-                'รูปใบขับขี่',
-                'อัพโหลดรูปใบขับขี่ โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
-                2,
-                'ใบขับขี่'
-            )}
-            {renderDocumentItem(
-                'ใบอนุญาตขับรถสาธารณะ',
-                'อัพโหลดใบอนุญาตขับรถสาธารณะ โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
-                3,
-                'ใบอนุญาตขับรถสาธารณะ'
-            )}
-            {renderDocumentItem(
-                'รูปบัตรประชาชน',
-                'อัพโหลดรูปบัตรประชาชน โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
-                4,
-                'บัตรประชาชน'
-            )}
-            {renderDocumentItem(
-                'รูปเอกสารประกันภัย',
-                'อัพโหลดเอกสารประกันภัย โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
-                5,
-                'เอกสารประกันภัย'
-            )}
+                )}
+                {renderDocumentItem(
+                    'รูปใบขับขี่',
+                    'อัพโหลดรูปใบขับขี่ โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
+                    2,
+                    'ใบขับขี่'
+                )}
+                {renderDocumentItem(
+                    'ใบอนุญาตขับรถสาธารณะ',
+                    'อัพโหลดใบอนุญาตขับรถสาธารณะ โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
+                    3,
+                    'ใบอนุญาตขับรถสาธารณะ'
+                )}
+                {renderDocumentItem(
+                    'รูปบัตรประชาชน',
+                    'อัพโหลดรูปบัตรประชาชน โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
+                    4,
+                    'บัตรประชาชน'
+                )}
+                {renderDocumentItem(
+                    'รูปเอกสารประกันภัย',
+                    'อัพโหลดเอกสารประกันภัย โดยชื่อบัญชีต้องตรงกับชื่อที่ได้ลงทะเบียนกับทางระบบไว้',
+                    5,
+                    'เอกสารประกันภัย'
+                )} */}
+
+                {renderDocumentItem('doc.bankBookHead', 'doc.bankBookDetail', 1, 'doc.bankBookLabel')}
+                {renderDocumentItem('doc.driverLicenseHead', 'doc.driverLicenseDetail', 2, 'doc.driverLicenseLabel')}
+                {renderDocumentItem('doc.publicLicenseHead', 'doc.publicLicenseDetail', 3, 'doc.publicLicenseLabel')}
+                {renderDocumentItem('doc.idCardHead', 'doc.idCardDetail', 4, 'doc.idCardLabel')}
+                {renderDocumentItem('doc.insuranceHead', 'doc.insuranceDetail', 5, 'doc.insuranceLabel')}
 
                 </View>
             </View>

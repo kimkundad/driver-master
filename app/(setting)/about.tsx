@@ -5,12 +5,13 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-
+import { useTranslation } from "react-i18next";
 const { width } = Dimensions.get('window');
 
 const About = () => {
     const navigation = useNavigation(); // For Back button functionality
-    
+    const { i18n, t } = useTranslation();
+
     return (
         <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
             <StatusBar style="dark" />
@@ -37,7 +38,7 @@ const About = () => {
 
                             <View style={styles.textListHead}>
                                 <Text style={{ fontSize: 18, fontFamily: 'Prompt_500Medium', color: '#fff', textAlign: 'center' }}>
-                                    เกี่ยวกับเรา
+                                {t("setting.about")}
                                 </Text>
                             </View>
 
@@ -55,28 +56,11 @@ const About = () => {
                             style={{ width: width, height: width }} />
                         </View>
                         <View style={styles.mt_20}>
-                            <Text style={styles.header}>บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด</Text>
-                            <Text style={styles.textDetail}>
-                            บริษัท โหลดมาสเตอร์ โลจิสติกส์ จำกัด ผู้นำด้านการจัดส่งพัสดุด่วนในประเทศไทย 
-                            ก่อตั้งขึ้นในปี พ.ศ. 2549 เราให้ความสำคัญกับการพัฒนาบุคลากรและเทคโนโลยีอย่างต่อเนื่อง 
-                            เพื่อมอบประสบการณ์การส่งพัสดุที่ดีที่สุดให้แก่ลูกค้า
-                            </Text>
-                            <Text style={styles.textDetail}>
-                                ปัจจุบันบริษัทมีจุดบริการอยู่ทั่วประเทศไทย ครอบคลุมทุกพื้นที่ในประเทศ
-                                เราสามารถรองรับการจัดส่งพัสดุได้ตามจำนวนที่ลูกค้าต้องการ 
-                                เพื่อตอบสนองการเติบโตของธุรกิจอีคอมเมิร์ซและธุรกิจอื่นๆ เช่น ธุรกิจค้าปลีกและค้าส่ง 
-                                ซึ่งเป็นกลุ่มธุรกิจที่มีส่วนช่วยกระตุ้นเศรษฐกิจไทยให้เติบโตอย่างยั่งยืน
-                            </Text>
-
-                            <Text style={styles.textDetail}>
-                            บริษัทของเรามุ่งมั่นที่จะให้บริการที่มีคุณภาพสูง เพื่อยกระดับคุณภาพชีวิตของสังคมส่วนรวม 
-                            พร้อมทั้งให้ความใส่ใจต่อพนักงาน และมีความรับผิดชอบต่อผู้มีส่วนได้เสียและนักลงทุน
-                            </Text>
-
-                            <Text style={styles.textDetail}>
-                            เราเต็มใจที่จะเป็นผู้ประกอบการด้านการจัดส่งพัสดุด่วนชั้นนำในประเทศไทย 
-                            โดยมุ่งเน้นการให้บริการที่ดีเลิศและเหนือความคาดหวังของลูกค้า
-                            </Text>
+                            <Text style={styles.header}>{t("about.header")}</Text>
+                            <Text style={styles.textDetail}>{t("about.description1")}</Text>
+                            <Text style={styles.textDetail}>{t("about.description2")}</Text>
+                            <Text style={styles.textDetail}>{t("about.description3")}</Text>
+                            <Text style={styles.textDetail}>{t("about.description4")}</Text>
                         </View>
                         
 
@@ -136,6 +120,7 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 20,
+        marginTop: -22
     },
     mt_20:{
         marginTop: 15

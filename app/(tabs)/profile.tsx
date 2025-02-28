@@ -166,7 +166,18 @@ export default function Profile() {
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#fff' }} >
       <Stack.Screen options={{
         headerTransparent: true,
-        headerTitle: 'Profile',
+        headerTitle: () => (
+                  <Text
+                    style={{
+                      color: '#000',
+                      fontFamily: 'Prompt_500Medium',
+                      fontSize: 18,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {t('profile.header')}
+                  </Text>
+                ),
         headerTitleAlign: 'center',
         headerTitleStyle: {
           color: '#000', // กำหนดสีของ headerTitle
@@ -227,7 +238,7 @@ export default function Profile() {
                   <Text style={{
                     color: '#000', fontSize: 14, fontFamily: 'Prompt_500Medium', fontWeight: '700', marginRight: 5
                   }}>
-                    รหัส
+                    {t('profile.code')}
                   </Text>
                   <Text style={{
                     color: '#000', fontSize: 14, fontFamily: 'Prompt_400Regular',
@@ -255,7 +266,7 @@ export default function Profile() {
                       <AntDesign name="user" size={20} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>Edit Profile</Text>
+                      <Text style={styles.textSeting}>{t('profile.editProfile')} </Text>
                     </View>
                   </View>
                   <View>
@@ -275,7 +286,7 @@ export default function Profile() {
                       <Ionicons name="document-outline" size={20} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>เอกสาร</Text>
+                      <Text style={styles.textSeting}>{t('profile.document')}</Text>
                     </View>
                   </View>
                   <View>
@@ -295,7 +306,7 @@ export default function Profile() {
                       <Entypo name="language" size={20} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>Language</Text>
+                      <Text style={styles.textSeting}>{t('profile.Language')}</Text>
                     </View>
                   </View>
 
@@ -321,7 +332,7 @@ export default function Profile() {
                       <Feather name="phone" size={20} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>Help Center</Text>
+                      <Text style={styles.textSeting}>{t('profile.Help')} </Text>
                     </View>
                   </View>
                   <View>
@@ -336,7 +347,7 @@ export default function Profile() {
                       <Ionicons name="notifications-outline" size={24} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>Notification</Text>
+                      <Text style={styles.textSeting}>{t('profile.Notification')}</Text>
                     </View>
                   </View>
                   <View>
@@ -362,7 +373,7 @@ export default function Profile() {
                         <MaterialIcons name="lock-outline" size={20} color="black" />
                       </View>
                       <View>
-                        <Text style={styles.textSeting}>privacy policy</Text>
+                        <Text style={styles.textSeting}>{t('profile.policy')}</Text>
                       </View>
                     </View>
                     <View>
@@ -383,7 +394,7 @@ export default function Profile() {
                       <Feather name="info" size={20} color="black" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting}>About Us</Text>
+                      <Text style={styles.textSeting}>{t('profile.About')} </Text>
                     </View>
                   </View>
                   <View>
@@ -400,7 +411,7 @@ export default function Profile() {
                       <AntDesign name="logout" size={20} color="#dc3545" />
                     </View>
                     <View>
-                      <Text style={styles.textSeting3}>Logout</Text>
+                      <Text style={styles.textSeting3}>{t('profile.Logout')}</Text>
                     </View>
                   </View>
                   <View>

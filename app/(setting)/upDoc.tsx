@@ -19,6 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as ImagePicker from 'expo-image-picker';
 import api from '../../hooks/api'; // Axios instance
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from "react-i18next";
 
 // Get screen width to calculate button size for 3 columns
 const { width } = Dimensions.get('window');
@@ -31,6 +32,7 @@ export default function UpDoc() {
     const [loading, setLoading] = useState(false);
     // Prepopulate state with one initial camera button
     const [files, setFiles] = useState([{ id: '1', uri: null }]); 
+    const { i18n, t } = useTranslation(); // ใช้ i18n สำหรับการจัดการภาษา
 
     useEffect(() => {
         (async () => {
@@ -236,7 +238,7 @@ export default function UpDoc() {
                     <View style={styles.formAction}>
                         <TouchableOpacity onPress={handleCreate} disabled={loading}>
                             <View style={styles.btn}>
-                            <Text style={styles.btnText}>{loading ? 'กำลังบันทึกข้อมูล...' : 'บันทึกข้อมูล'}</Text>
+                            <Text style={styles.btnText}>{loading ? `${t('profile.Updating')}...` : `${t('profile.Update')}`}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

@@ -11,6 +11,7 @@ import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import React, { useState, useEffect } from 'react';
 import api from '../../hooks/api'; // Axios instance
 import DeviveryStatus from '../../components/DeviveryStatus';
+import { useTranslation } from "react-i18next";
 
 export default function Tracking() {
 
@@ -30,6 +31,7 @@ export default function Tracking() {
 
   const [isEnabled, setIsEnabled] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
+  const { i18n, t } = useTranslation();
 
   const toggleSwitch = async () => {
     const newStatus = !isEnabled;
@@ -189,20 +191,20 @@ export default function Tracking() {
                 pathname: '(order)/danger',
                 params: {
                   id: order?.id,
-                  textHead: 'แจ้งอุบัติเหตุ',
+                  textHead: t('detail.Report'),
                   myStep: 1,
                 },
               });
             }}
           >
             <View style={styles.btnDanger}>
-              <Text style={styles.btnText}>แจ้งอุบัติเหตุ</Text>
+              <Text style={styles.btnText}>{t('detail.Report')}</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleCancel} disabled={loading} style={{ marginTop: 15 }} >
             <View style={styles.btnDangerCan}>
-              <Text style={styles.btnText}>{loading ? 'กำลังยกเลิกแจ้งเหตุ...' : 'ยกเลิกแจ้งเหตุ'} </Text>
+              <Text style={styles.btnText}>{loading ?  `${t('detail.Canceling')}...` : `${t('detail.CancelNotification')}` } </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -216,14 +218,14 @@ export default function Tracking() {
               pathname: '(order)/danger',
               params: {
                 id: order?.id,
-                textHead: 'แจ้งอุบัติเหตุ',
+                textHead: t('detail.Report'),
                 myStep: 1,
               },
             });
           }}
         >
           <View style={styles.btnDanger}>
-            <Text style={styles.btnText}>แจ้งอุบัติเหตุ</Text>
+            <Text style={styles.btnText}>{t('detail.Report')}</Text>
           </View>
         </TouchableOpacity>
       );
@@ -240,7 +242,7 @@ export default function Tracking() {
 
       <View style={styles.backButtonContainer}>
               
-              <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
+              <TouchableOpacity style={styles.btnBack} onPress={() => router.push('/(tabs)')}>
                                 <View
                                     style={{
                                         backgroundColor: 'rgba(255, 255, 255, 1)',
@@ -351,7 +353,7 @@ export default function Tracking() {
 
             <View style={styles.textBoxDetail}>
               <View style={styles.flexItem}>
-                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>ต้นทาง </Text>
+                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>{t('home.origin')} </Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>TIP 9 Industrial Project </Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>ถ.สุขุมวิท บางปูใหม่ เมืองสมุทรปราการ สมุทรปราการ 10280</Text>
               </View>
@@ -364,7 +366,7 @@ export default function Tracking() {
                   style={styles.userImage}
                   source={{ uri: 'https://wpnrayong.com/admin/assets/media/avatars/300-12.jpg' }} />
                 <View>
-                  <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 13, color: '#666' }}>ผู้รอรับสินค้า,</Text>
+                  <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 13, color: '#666' }}>{t('detail.receive')},</Text>
                   <Text style={{ fontFamily: 'Prompt_500Medium', fontSize: 15, marginTop: -3 }}>{order?.name_re} </Text>
                   <Text style={{ fontFamily: 'Prompt_500Medium', fontSize: 14, marginTop: -3 }}>{order?.phone_re} </Text>
 
@@ -378,7 +380,7 @@ export default function Tracking() {
 
             <View style={styles.textBoxDetail}>
               <View style={styles.flexItem}>
-                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>ปลายทาง</Text>
+                <Text style={{ fontFamily: 'Prompt_400Regular', fontSize: 12, color: '#666' }}>{t('home.destination')}</Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>{order?.name_re}</Text>
                 <Text style={{ fontWeight: 700, fontSize: 13 }}>{order?.adddress_re} {order?.province2}</Text>
               </View>
@@ -386,7 +388,7 @@ export default function Tracking() {
 
           </View>
 
-          <Text style={styles.sectionTitle}>รูปโหลดของขึ้นรถ</Text>
+          <Text style={styles.sectionTitle}>{t('detail.loadProduct')}</Text>
           <View style={styles.boxItemList2}>
 
             <View style={styles.showflexCamera}>
@@ -399,7 +401,7 @@ export default function Tracking() {
                       pathname: '(order)/addPic',
                       params: {
                         id: order?.id,
-                        textHead: 'รูปโหลดของขึ้นรถ',
+                        textHead: t('detail.loadProduct'),
                         myStep: 1
                       }, // Pass the order id as a parameter
                     });
@@ -427,12 +429,12 @@ export default function Tracking() {
             </View>
             <View style={styles.dottedBorder}></View>
             <View style={styles.showflex}>
-              <Text style={styles.remarkh}> หมายเหตุ : </Text>
+              <Text style={styles.remarkh}> {t('detail.remark')} : </Text>
               <Text style={styles.remarkx}>{order?.remark_dri1}</Text>
             </View>
           </View>
 
-          <Text style={styles.sectionTitle}>ยืนยันส่งของให้ลูกค้า</Text>
+          <Text style={styles.sectionTitle}>{t('detail.delivery')}</Text>
           <View style={styles.boxItemList2}>
             <View style={styles.textListHead2}>
               <View style={styles.profile}>
@@ -440,7 +442,7 @@ export default function Tracking() {
                   <Ionicons name="notifications-outline" size={24} color="black" />
                 </View>
                 <View>
-                  <Text style={styles.textSeting}>แจ้งให้ลูกค้ากำลังไป</Text>
+                  <Text style={styles.textSeting}>{t('detail.Inform')}</Text>
                 </View>
               </View>
               <View>
@@ -455,7 +457,7 @@ export default function Tracking() {
             </View>
           </View>
 
-          <Text style={styles.sectionTitle}>รูปส่งของสำเร็จ</Text>
+          <Text style={styles.sectionTitle}>{t('detail.successfulDelivery')}</Text>
           <View style={styles.boxItemList2}>
             <View style={styles.showflexCamera}>
               {order?.order_status == 1 && (
@@ -465,7 +467,7 @@ export default function Tracking() {
                       pathname: '(order)/addPic',
                       params: {
                         id: order?.id,
-                        textHead: 'รูปโหลดส่งงาน',
+                        textHead: t('detail.successfulDelivery'),
                         myStep: 2
                       }, // Pass the order id as a parameter
                     });
@@ -490,7 +492,7 @@ export default function Tracking() {
             </View>
             <View style={styles.dottedBorder}></View>
             <View style={styles.showflex}>
-              <Text style={styles.remarkh}> หมายเหตุ : </Text>
+              <Text style={styles.remarkh}> {t('detail.remark')} : </Text>
               <Text style={styles.remarkx}>{order?.remark_dri2}</Text>
             </View>
           </View>
@@ -504,7 +506,7 @@ export default function Tracking() {
                 onPress={handleCreate} disabled={loading}
               >
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>{loading ? 'กำลังส่งของสำเร็จ...' : 'ส่งของสำเร็จ'} </Text>
+                  <Text style={styles.btnText}>{loading ?  `${t('detail.being')}...` : `${t('detail.successfully')}` }</Text>
                 </View>
               </TouchableOpacity>
 
