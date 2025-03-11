@@ -1,12 +1,8 @@
 import { StyleSheet, Image, Button, Text, View, Alert, FlatList, Dimensions, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import MapViewDirections from 'react-native-maps-directions';
 import { Link, useNavigation, router, Stack, useLocalSearchParams } from 'expo-router';
-import Feather from '@expo/vector-icons/Feather';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import React, { useState, useEffect } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -202,7 +198,7 @@ onPress={() =>
           <View style={styles.locationsBox}>
             <View style={styles.myflex}>
               <FontAwesome name="map-marker" size={24} color="black" />
-              <Text style={styles.TextMap}>ค้นหาที่อยู่บนแผนที่</Text>
+              <Text style={styles.TextMap}>{t('detail.findMap')}</Text>
             </View>
             <Entypo name="chevron-small-right" size={26} color="black" />
           </View>
@@ -229,7 +225,7 @@ onPress={() =>
       <Text style={styles.sectionTitle}>{t('detail.remark')}</Text>
       <TextInput
         style={styles.textArea}
-        placeholder="รายละเอียดเพิ่มเติม..."
+        placeholder={t('detail.remark')}
         value={notes}
         multiline={true}
         numberOfLines={4}

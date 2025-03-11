@@ -23,12 +23,19 @@
        "delivery ": "确认商品已送达客户",
        "Inform": "通知客户",
        "successfulDelivery": "发货成功图片",
-       "successfully ": "成功的",
+       "xsuccessfull ": "成功的",
+       "xsuccess ": "成功的",
        "being": "成功",
+       "being2": "成功的",
        "Report": "报告事故",
        "CancelNotification": "取消",
        "Canceling": "取消",
-       "choose": "选择这个目的地"
+       "choose": "选择这个目的地",
+       "sendComDe": "完成任务后，你可以按确认完成按钮继续下一个任务",
+       "sendComBtn": "确认成功",
+       "province": "省",
+       "sendCom": "交付成功",
+       "findMap": "在地图上查找地址"
     },
     "profile": {
       "header": "环境",

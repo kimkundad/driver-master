@@ -506,7 +506,7 @@ export default function Tracking() {
                 onPress={handleCreate} disabled={loading}
               >
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>{loading ?  `${t('detail.being')}...` : `${t('detail.successfully')}` }</Text>
+                  <Text style={styles.btnText}>{loading ?  `${t('detail.being')}...` : `${t('detail.being2')}` }</Text>
                 </View>
               </TouchableOpacity>
 

@@ -19,7 +19,23 @@
         "googleMapsApiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "This app needs access to your camera for scanning."
+        "NSCameraUsageDescription": "This app needs access to your camera for scanning and capturing images.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow image selection and upload.",
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location to provide navigation and tracking while you are using the app.",
+        "NSLocationAlwaysUsageDescription": "This app requires access to your location even when the app is not in use for tracking and improved navigation.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access both while in use and in the background for navigation and tracking purposes.",
+        "NSMicrophoneUsageDescription": "This app requires microphone access to enable voice input or audio recording.",
+        "NSMotionUsageDescription": "This app requires motion access to detect driving activity and optimize route tracking.",
+        "NSBluetoothAlwaysUsageDescription": "This app requires Bluetooth access to communicate with connected devices.",
+        "NSBluetoothPeripheralUsageDescription": "This app requires Bluetooth access to detect and interact with supported hardware.",
+        "NSContactsUsageDescription": "This app requires access to your contacts to allow you to share location and communicate with contacts.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       },
       "bundleIdentifier": "com.kimkundad.drivermaster"
     },
@@ -60,15 +76,29 @@
           "isAndroidForegroundServiceEnabled": true
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-font",
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "eas": {
-        "projectId": "347f2c79-c133-4e56-9ace-2bf168d29bef"
+    "eas": {
+      "projectId": "347f2c79-c133-4e56-9ace-2bf168d29bef"
+    },
+    "expoDoctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-keyboard-aware-scroll-view",
+          "react-native-maps-directions",
+          "axios-retry",
+          "i18next",
+          "socket.io-client"
+        ],
+        "listUnknownPackages": false
       }
     }
+  }
   }
 }

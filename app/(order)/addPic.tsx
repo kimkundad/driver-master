@@ -12,6 +12,7 @@ import {
     Alert,
     Image,
     TextInput,
+    KeyboardAvoidingView
 } from 'react-native';
 import { Stack, useNavigation, router, useLocalSearchParams } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -21,6 +22,7 @@ import api from '../../hooks/api'; // Axios instance
 import * as Location from 'expo-location';
 import provinceData from '../../assets/raw/raw_database.json';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from "react-i18next";
 
 // Get screen width to calculate button size for 3 columns
 const { width } = Dimensions.get('window');
@@ -38,6 +40,7 @@ export default function FileUploadScreen() {
     const [location, setLocation] = useState(null);
     const [province, setProvince] = useState('');
     const [getAddress, setGetAddress] = useState(null);
+    const { i18n, t } = useTranslation();
 
     useEffect(() => {
         (async () => {
@@ -268,6 +271,11 @@ const handleCreate = async () => {
     );
 
     return (
+        <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+    >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <LinearGradient
@@ -322,7 +330,7 @@ const handleCreate = async () => {
                     {/* Text Area Input */}
                     <TextInput
                         style={styles.textArea}
-                        placeholder="รายละเอียดเพิ่มเติม..."
+                        placeholder={t('detail.remark')}
                         placeholderTextColor="#888"
                         multiline={true}
                         numberOfLines={4}
@@ -335,7 +343,7 @@ const handleCreate = async () => {
                     <View style={styles.formAction}>
                         <TouchableOpacity onPress={handleCreate} disabled={loading}>
                             <View style={styles.btn}>
-                            <Text style={styles.btnText}>{loading ? 'กำลังบันทึกข้อมูล...' : 'บันทึกข้อมูล'}</Text>
+                            <Text style={styles.btnText}>{loading ? `${t('profile.Updating')}...` : `${t('profile.Update')}`}</Text>
                             </View>
                         </TouchableOpacity>
                         </View>
@@ -344,6 +352,7 @@ const handleCreate = async () => {
                 </View>
             </View>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 

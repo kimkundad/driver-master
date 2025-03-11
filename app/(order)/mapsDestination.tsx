@@ -175,7 +175,7 @@ export default function MapsDestination() {
 
                 {province && (
                   <View style={styles.input}>
-                    <Text style={styles.inputLabel}>จังหวัด</Text>
+                    <Text style={styles.inputLabel}>{t('detail.province')}</Text>
                     <TextInput
                       clearButtonMode="while-editing"
                       editable={false}
@@ -208,7 +208,7 @@ export default function MapsDestination() {
               </TouchableOpacity> */}
 
               <TouchableOpacity style={styles.greenButton} onPress={handleSelectLocation}>
-                <Text style={styles.greenButtonText}>เลือกจุดหมายปลายทางนี้</Text>
+                <Text style={styles.greenButtonText}>{t('detail.choose')}</Text>
               </TouchableOpacity>
 
             </View>
