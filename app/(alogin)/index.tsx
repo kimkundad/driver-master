@@ -54,7 +54,7 @@ export default function Login() {
       
 
       // Handle different `verify` statuses
-      const { token, verify, user } = response.data;
+      const { token, verify, user, refresh_token } = response.data;
       console.log('Response verify:', response.data);
       
       if (verify === 0) {
@@ -67,7 +67,7 @@ export default function Login() {
       } else if (verify === 1 && token) {
         // User is logged in successfully, save the tokens and user info
         await AsyncStorage.setItem('jwt_token', token);
-        await AsyncStorage.setItem('refresh_token', token); // Assuming refresh_token is the same as the token here
+        await AsyncStorage.setItem('refresh_token', refresh_token); // Assuming refresh_token is the same as the token here
         await AsyncStorage.setItem('user_profile', JSON.stringify(user));
         
         Alert.alert('Success', 'Login successful!');

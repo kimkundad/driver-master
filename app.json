@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "LoadMaster Driver",
+    "name": "THLoadMaster Driver",
     "slug": "gps-app",
     "version": "1.0.0",
     "newArchEnabled": true,
@@ -15,27 +15,29 @@
     },
     "ios": {
       "supportsTablet": true,
+      "buildNumber": "1.0",
       "config": {
         "googleMapsApiKey": "AIzaSyDtcFHSNerbvIWPVv5OStj-czBq_6RMbRg"
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "This app needs access to your camera for scanning and capturing images.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow image selection and upload.",
-        "NSLocationWhenInUseUsageDescription": "This app requires access to your location to provide navigation and tracking while you are using the app.",
-        "NSLocationAlwaysUsageDescription": "This app requires access to your location even when the app is not in use for tracking and improved navigation.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access both while in use and in the background for navigation and tracking purposes.",
-        "NSMicrophoneUsageDescription": "This app requires microphone access to enable voice input or audio recording.",
-        "NSMotionUsageDescription": "This app requires motion access to detect driving activity and optimize route tracking.",
-        "NSBluetoothAlwaysUsageDescription": "This app requires Bluetooth access to communicate with connected devices.",
-        "NSBluetoothPeripheralUsageDescription": "This app requires Bluetooth access to detect and interact with supported hardware.",
-        "NSContactsUsageDescription": "This app requires access to your contacts to allow you to share location and communicate with contacts.",
+        "NSCameraUsageDescription": "LoadMaster requires access to your camera to scan and capture images for delivery purposes.",
+        "NSPhotoLibraryUsageDescription": "LoadMaster requires access to your photo library to upload images related to delivery documents or packages.",
+        "NSLocationWhenInUseUsageDescription": "LoadMaster needs access to your location while the app is in use for accurate navigation and tracking.",
+        "NSLocationAlwaysUsageDescription": "LoadMaster needs access to your location even when the app is not actively in use to support continuous tracking and navigation.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "LoadMaster requires location access at all times to ensure optimal tracking and navigation functionality.",
+        "NSMicrophoneUsageDescription": "LoadMaster needs access to your microphone for features that use voice input or audio recording.",
+        "NSMotionUsageDescription": "LoadMaster uses motion activity to detect driving behavior and enhance route optimization.",
+        "NSBluetoothAlwaysUsageDescription": "LoadMaster needs Bluetooth access to maintain connections with supported external devices.",
+        "NSBluetoothPeripheralUsageDescription": "LoadMaster requires Bluetooth access to discover and interact with nearby compatible hardware.",
+        "NSContactsUsageDescription": "LoadMaster needs access to your contacts to enable sharing of delivery details and communication features.",
         "UIBackgroundModes": [
           "location",
           "fetch"
         ],
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.kimkundad.drivermaster"
     },
@@ -52,9 +54,15 @@
         "FOREGROUND_SERVICE_LOCATION",
         "FOREGROUND_SERVICE",
         "WAKE_LOCK",
-        "CAMERA"
+        "CAMERA",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION"
       ],
       "package": "com.kimkundad.drivermaster",
+      "versionCode": 1,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCsx9tQ2Mj7WWnunxa8P2blQLcGtjroLVE"
@@ -73,7 +81,8 @@
           "locationAlwaysAndWhenInUsePermission": "Allow Driver Master to always access your location in the background.",
           "locationWhenInUsePermission": "Allow Driver Master to access your location when the app is in use.",
           "isAndroidBackgroundLocationEnabled": true,
-          "isAndroidForegroundServiceEnabled": true
+          "isAndroidForegroundServiceEnabled": true,
+          "isIosBackgroundLocationIndicatorEnabled": true
         }
       ],
       "expo-localization",
@@ -84,21 +93,21 @@
       "typedRoutes": true
     },
     "extra": {
-    "eas": {
-      "projectId": "347f2c79-c133-4e56-9ace-2bf168d29bef"
-    },
-    "expoDoctor": {
-      "reactNativeDirectoryCheck": {
-        "exclude": [
-          "react-native-keyboard-aware-scroll-view",
-          "react-native-maps-directions",
-          "axios-retry",
-          "i18next",
-          "socket.io-client"
-        ],
-        "listUnknownPackages": false
+      "eas": {
+        "projectId": "347f2c79-c133-4e56-9ace-2bf168d29bef"
+      },
+      "expoDoctor": {
+        "reactNativeDirectoryCheck": {
+          "exclude": [
+            "react-native-keyboard-aware-scroll-view",
+            "react-native-maps-directions",
+            "axios-retry",
+            "i18next",
+            "socket.io-client"
+          ],
+          "listUnknownPackages": false
+        }
       }
     }
-  }
   }
 }

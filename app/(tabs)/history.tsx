@@ -97,6 +97,7 @@ export default function History() {
     setLoading(true);
     try {
       const response = await api.get('/getHistory');
+      console.log('response', response.data)
       setData(response.data?.order || []);
       setFilteredData(response.data?.order || []);
     } catch (error) {

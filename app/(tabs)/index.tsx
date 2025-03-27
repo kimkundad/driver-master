@@ -18,6 +18,9 @@ const LOCATION_TASK_NAME = 'background-location-task';
 
 // Define the background task for location updates
 if (!TaskManager.isTaskDefined(LOCATION_TASK_NAME)) {
+
+  console.error('Background location error -->:', LOCATION_TASK_NAME);
+
   TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     if (error) {
       console.error('Background location error:', error);
@@ -48,7 +51,6 @@ if (!TaskManager.isTaskDefined(LOCATION_TASK_NAME)) {
   });
 }
 
-
 // Function to send location to the API
 const sendLocationToApi = async (latitude, longitude) => {
   try {
@@ -78,32 +80,56 @@ export default function HomeScreen({ navigation }) {
   
 
  // Request Permissions and Start Background Location Updates
- const startBackgroundLocationTracking = async () => {
-  try {
-    const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-    if (foregroundStatus !== 'granted') {
-      Alert.alert('Permission Denied', 'Foreground location access is required.');
-      return;
-    }
-
-    const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-    if (backgroundStatus !== 'granted') {
-      Alert.alert('Permission Denied', 'Background location access is required.');
-      return;
-    }
-
-    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-      accuracy: Location.Accuracy.High,
-      distanceInterval: 5000,
-      foregroundService: {
-        notificationTitle: 'Location Tracking Active',
-        notificationBody: 'Tracking your location in the background',
-      },
-    });
-    console.log('Background location tracking started');
-  } catch (error) {
-    console.error('Error starting location tracking:', error);
+ const requestLocationPermissions = async () => {
+  // ขออนุญาต Foreground Location
+  const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+  if (foregroundStatus !== 'granted') {
+    Alert.alert('Permission Denied', 'Foreground location access is required.');
+    return false;
   }
+
+  // ขออนุญาต Background Location
+  const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+  if (backgroundStatus !== 'granted') {
+    Alert.alert(
+      'Permission Denied',
+      'Background location access is required. Please enable it in Settings.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Open Settings', onPress: () => Location.getForegroundPermissionsAsync() }
+      ]
+    );
+    return false;
+  }
+
+  return true;
+};
+
+
+const startBackgroundLocationTracking = async () => {
+  const hasPermission = await requestLocationPermissions();
+  if (!hasPermission) return;
+
+  const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+  if (isTracking) {
+    console.log('Already tracking location in background');
+    return;
+  }
+
+  await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+    accuracy: Location.Accuracy.High,
+    timeInterval: 5000, // 5 วินาที
+    distanceInterval: 2, // อัปเดตทุก 10 เมตร
+    deferredUpdatesInterval: 5000, // ลดการใช้พลังงาน
+    foregroundService: {
+      notificationTitle: 'Location Tracking Active',
+      notificationBody: 'Tracking your location in the background',
+    },
+    pausesUpdatesAutomatically: false, // ป้องกัน iOS หยุด tracking เอง
+    showsBackgroundLocationIndicator: true,
+  });
+
+  console.log('Background location tracking started');
 };
 
 // Stop Background Location Updates
